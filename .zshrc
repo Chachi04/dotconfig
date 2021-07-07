@@ -126,7 +126,7 @@ export ZSHZ_DATA='/home/chachi/.local/share/oh-my-zsh/custom/plugins/zsh-z/.z'
 # export ARCHFLAGS="-arch x86_64"
 
 # Source aliases
-source ~/dotfiles/zsh/.aliases
+source $HOME/.aliases
 
 
 # figlet "Welcome    Chachi"
