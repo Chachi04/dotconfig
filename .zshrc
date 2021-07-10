@@ -153,4 +153,9 @@ zle_highlight+=(paste:none)
 # export fpath = /usr/local/share/zsh/site-functions/_gh $fpath
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
+
+# Default programs:
+export EDITOR="nvim"
+export BROWSER="brave"
+
 neofetch
