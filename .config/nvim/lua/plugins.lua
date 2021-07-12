@@ -103,9 +103,46 @@ require("packer").startup(
         use "szw/vim-maximizer"
 
         -- Git plugins
-        use "mhinz/vim-signify"
+        use {
+            "lewis6991/gitsigns.nvim",
+            config = function()
+                require "gitsigns".setup {
+                    signs = {
+                        add = {
+                            hl = "GitSignsAdd",
+                            text = "+",
+                            numhl = "GitSignsAddNr",
+                            linehl = "GitSignsAddLn"
+                        },
+                        change = {
+                            hl = "GitSignsChange",
+                            text = "│",
+                            numhl = "GitSignsChangeNr",
+                            linehl = "GitSignsChangeLn"
+                        },
+                        delete = {
+                            hl = "GitSignsDelete",
+                            text = "-",
+                            numhl = "GitSignsDeleteNr",
+                            linehl = "GitSignsDeleteLn"
+                        },
+                        topdelete = {
+                            hl = "GitSignsDelete",
+                            text = "‾",
+                            numhl = "GitSignsDeleteNr",
+                            linehl = "GitSignsDeleteLn"
+                        },
+                        changedelete = {
+                            hl = "GitSignsChange",
+                            text = "~",
+                            numhl = "GitSignsChangeNr",
+                            linehl = "GitSignsChangeLn"
+                        }
+                    }
+                }
+            end
+        }
         use "tpope/vim-fugitive"
-        -- use "kdheepak/lazygit.nvim"
 
         -- Statusline
         use {
@@ -148,7 +185,9 @@ require("packer").startup(
                 require "toggleterm".setup {
                     open_mapping = "<A-i>",
                     hide_numbers = true,
+                    shade_terminal = true,
                     shading_factor = "3",
+                    start_in_insert = true,
                     insert_mappings = true,
                     persist_size = true,
                     shell = vim.o.shell,
@@ -257,5 +296,21 @@ require("packer").startup(
 
         -- Reload plugin
         use "famiu/nvim-reload"
+
+        -- Misc
+        use {
+            "lukas-reineke/indent-blankline.nvim",
+            config = function()
+                vim.cmd "highlight IndentBlanklineChar guifg=#4d4d4d gui=nocombine"
+                vim.cmd "highlight IndentBlanklineSpaceChar guifg=#4d4d4d gui=nocombine"
+                vim.cmd "highlight IndentBlanklineContextChar guifg=#737373 gui=nocombine"
+                vim.cmd "let g:indent_blankline_use_treesitter = v:true"
+                vim.cmd "let g:indent_blankline_show_current_context = v:true"
+                vim.cmd "let g:indent_blankline_buftype_exclude = ['terminal']"
+                vim.cmd "let g:indent_blankline_filetype_exclude = ['help']"
+                vim.cmd "let g:indent_blankline_char = '▏'"
+                vim.cmd "let g:indent_blankline_space_char = ' '"
+            end
+        }
     end
 )
