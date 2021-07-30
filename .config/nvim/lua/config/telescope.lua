@@ -2,9 +2,15 @@ local actions = require("telescope.actions")
 
 require("telescope").setup {
     defaults = {
+        vimgrep_arguments = {
+            "rg",
+            "--follow"
+        },
+        prompt_prefix = "> ",
+        selection_caret = "> ",
+        entry_prefix = "  ",
         file_sorter = require("telescope.sorters").get_fzy_sorter,
         file_ignore_patterns = {"node_modules/*", "vendor/*", "storage/*", "/*.png", "venv/*", "/*.pyc"},
-        prompt_prefix = "> ",
         color_devicons = true,
         use_less = true,
         file_previewer = require("telescope.previewers").vim_buffer_cat.new,
@@ -16,7 +22,14 @@ require("telescope").setup {
                 ["<C-q>"] = actions.send_to_qflist,
                 ["<C-j>"] = actions.move_selection_next,
                 ["<C-k>"] = actions.move_selection_previous
-                -- ["<CR>"]  = actions.select_tab,
+                -- ["<CR>"] = actions.select_tab
+            }
+        },
+        layout_strategy = "flex",
+        layout_config = {
+            horizontal = {
+                preview_width = 90,
+                mirror = false
             }
         }
     },
@@ -49,16 +62,16 @@ M.search_dotfiles = function()
     )
 end
 
-M.git_branches = function()
-    require("telescope.builtin").git_braches(
-        {
-            attach_mappings = function(_, map)
-                map("i", "<C-d>", actions.git_delete_branch)
-                map("n", "<C-d>", actions.git_delete_branch)
-                return true
-            end
-        }
-    )
-end
+-- M.git_branches = function()
+--     require("telescope.builtin").git_braches(
+--         {
+--             attach_mappings = function(_, map)
+--                 map("i", "<C-d>", actions.git_delete_branch)
+--                 map("n", "<C-d>", actions.git_delete_branch)
+--                 return true
+--             end
+--         }
+--     )
+-- end
 
 return M

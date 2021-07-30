@@ -4,7 +4,8 @@ local opts = {noremap = true, silent = true}
 vim.g.mapleader = " "
 
 -- Reload config
-map("n", "<leader><CR>", '<cmd>Reload<CR><cmd>echo "Reload config"<CR>', opts)
+map("n", "<leader><CR>", '<cmd>Reload<CR><cmd>PackerCompile<CR><cmd>echo "Reload config"<CR>', opts)
+-- map("n", "<leader><CR>", '<cmd>so ~/.config/nvim/init.lua<CR><cmd>echo "Sourced config"<CR>', opts)
 -- nnoremap <silent> <leader><CR> :so ~/.config/nvim/init.vim<CR>:echo "init.vim has been sourced successfully"<CR>
 
 -- Open/Close Floating Terminal

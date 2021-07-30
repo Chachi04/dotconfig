@@ -1,4 +1,3 @@
-
 augroup Cpp
     autocmd!
     autocmd VimEnter *.cpp command Run lua require"config.term".cpp()

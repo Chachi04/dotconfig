@@ -11,10 +11,11 @@ require("packer").startup(
         use "wbthomason/packer.nvim"
 
         -- Telescope plugins
-        use "nvim-telescope/telescope.nvim"
+        use {
+            "nvim-telescope/telescope.nvim",
+            requires = {{"nvim-lua/popup.nvim"}, {"nvim-lua/plenary.nvim"}}
+        }
         use "nvim-telescope/telescope-fzy-native.nvim"
-        use "nvim-lua/popup.nvim"
-        use "nvim-lua/plenary.nvim"
         use "kyazdani42/nvim-web-devicons"
 
         -- Lsp plugins
@@ -82,22 +83,6 @@ require("packer").startup(
             end
         }
 
-        -- use {
-        --     "nvim-treesitter/playground",
-        --     config = function()
-        --         require "nvim-treesitter.configs".setup {
-        --             playground = {
-        --                 enable = true
-        --             },
-        --             query_linter = {
-        --                 enable = true,
-        --                 ues_virtual_text = true,
-        --                 lint_events = {"BufWrite", "CursorHold"}
-        --             }
-        --         }
-        --     end
-        -- }
-
         -- Debug plugins
         -- use "puremourning/vimspector"
         use "szw/vim-maximizer"
@@ -142,7 +127,7 @@ require("packer").startup(
                 }
             end
         }
-        use "tpope/vim-fugitive"
+        -- use "tpope/vim-fugitive"
 
         -- Statusline
         use {
@@ -151,7 +136,9 @@ require("packer").startup(
                 require "lualine".setup {
                     options = {
                         theme = "onedark",
-                        disabled_filetypes = {"NvimTree"}
+                        disabled_filetypes = {"NvimTree"},
+                        section_serparators = "",
+                        component_separators = ""
                     },
                     sections = {
                         lualine_a = {"mode"},
@@ -268,7 +255,7 @@ require("packer").startup(
             "navarasu/onedark.nvim",
             config = function()
                 vim.g.onedark_style = "warmer"
-                require("onedark").setup()
+                require "onedark".setup()
             end
         }
 
@@ -298,19 +285,19 @@ require("packer").startup(
         use "famiu/nvim-reload"
 
         -- Misc
-        use {
-            "lukas-reineke/indent-blankline.nvim",
-            config = function()
-                vim.cmd "highlight IndentBlanklineChar guifg=#4d4d4d gui=nocombine"
-                vim.cmd "highlight IndentBlanklineSpaceChar guifg=#4d4d4d gui=nocombine"
-                vim.cmd "highlight IndentBlanklineContextChar guifg=#737373 gui=nocombine"
-                vim.cmd "let g:indent_blankline_use_treesitter = v:true"
-                vim.cmd "let g:indent_blankline_show_current_context = v:true"
-                vim.cmd "let g:indent_blankline_buftype_exclude = ['terminal']"
-                vim.cmd "let g:indent_blankline_filetype_exclude = ['help']"
-                vim.cmd "let g:indent_blankline_char = '▏'"
-                vim.cmd "let g:indent_blankline_space_char = ' '"
-            end
-        }
+        -- use {
+        --     "lukas-reineke/indent-blankline.nvim",
+        --     config = function()
+        --         vim.cmd "highlight IndentBlanklineChar guifg=#4d4d4d gui=nocombine"
+        --         vim.cmd "highlight IndentBlanklineSpaceChar guifg=#4d4d4d gui=nocombine"
+        --         vim.cmd "highlight IndentBlanklineContextChar guifg=#737373 gui=nocombine"
+        --         vim.cmd "let g:indent_blankline_use_treesitter = v:true"
+        --         vim.cmd "let g:indent_blankline_show_current_context = v:true"
+        --         vim.cmd "let g:indent_blankline_buftype_exclude = ['terminal', 'nofile']"
+        --         vim.cmd "let g:indent_blankline_filetype_exclude = ['help']"
+        --         vim.cmd "let g:indent_blankline_char = '▏'"
+        --         vim.cmd "let g:indent_blankline_space_char = ' '"
+        --     end
+        -- }
     end
 )

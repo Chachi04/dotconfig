@@ -52,9 +52,8 @@ utils.opt("o", "completeopt", "menuone,noinsert,noselect")
 utils.opt("o", "mouse", "n")
 vim.o.shortmess = vim.o.shortmess .. "c"
 
-utils.opt("o", "autochdir", true)
 vim.o.wildignore = vim.o.wildignore .. "*.png"
 
-vim.g.t_8f = "<Esc>[38;2;%lu;%lu;%lum]"
+-- vim.g.t_8f = "<Esc>[38;2;%lu;%lu;%lum]"
 -- vim.api.nvim_set_var("&t_8f", "<Esc>[38;2;%lu;%lu;%lum")
 -- vim.api.nvim_set_var("&t_8f", "<Esc>[48;2;%lu;%lu;%lum")

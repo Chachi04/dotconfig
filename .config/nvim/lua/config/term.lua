@@ -24,7 +24,8 @@ local cpp =
             vim.fn.jobsend(term.job_id, "clear\n")
             vim.fn.jobsend(term.job_id, "g++ " .. file .. " -o compiled/" .. run .. "\n")
             vim.fn.jobsend(term.job_id, "./compiled/" .. run .. "\n")
-        end
+        end,
+        hiddent = true
     }
 )
 
