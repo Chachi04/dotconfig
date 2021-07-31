@@ -93,6 +93,18 @@ bindsym $super+8 workspace 8
 bindsym $super+9 workspace 9
 bindsym $super+0 workspace 10
 
+# switch to workspace with Numberpad keys
+bindsym $super+Mod2+KP_1 workspace 1
+bindsym $super+Mod2+KP_2 workspace 2
+bindsym $super+Mod2+KP_3 workspace 3
+bindsym $super+Mod2+KP_4 workspace 4
+bindsym $super+Mod2+KP_5 workspace 5
+bindsym $super+Mod2+KP_6 workspace 6
+bindsym $super+Mod2+KP_7 workspace 7
+bindsym $super+Mod2+KP_8 workspace 8
+bindsym $super+Mod2+KP_9 workspace 9
+bindsym $super+Mod2+KP_0 workspace 10
+
 # move focused container to workspace
 bindsym $super+Shift+1 move container to workspace 1; workspace 1
 bindsym $super+Shift+2 move container to workspace 2; workspace 2
@@ -104,6 +116,18 @@ bindsym $super+Shift+7 move container to workspace 7; workspace 7
 bindsym $super+Shift+8 move container to workspace 8; workspace 8
 bindsym $super+Shift+9 move container to workspace 9; workspace 9
 bindsym $super+Shift+0 move container to workspace 10; workspace 10
+
+# move focused container to workspace with Numberpad keys
+bindsym $super+Shift+Mod2+KP_End move container to workspace 1
+bindsym $super+Shift+Mod2+KP_Down move container to workspace 2
+bindsym $super+Shift+Mod2+KP_Next move container to workspace 3
+bindsym $super+Shift+Mod2+KP_Left move container to workspace 4
+bindsym $super+Shift+Mod2+KP_Begin move container to workspace 5
+bindsym $super+Shift+Mod2+KP_Right move container to workspace 6
+bindsym $super+Shift+Mod2+KP_Home move container to workspace 7
+bindsym $super+Shift+Mod2+KP_Up move container to workspace 8
+bindsym $super+Shift+Mod2+KP_Prior move container to workspace 9
+bindsym $super+Shift+Mod2+KP_Insert move container to workspace 10
 
 
 
@@ -394,6 +418,10 @@ font pango:Noto Mono Regular 13
 
 # ArcoLinux Welcome App
 exec --no-startup-id dex $HOME/.config/autostart/arcolinux-welcome-app.desktop
+
+# Touchpad
+exec --no-startup-id xinput disable 16
+bindsym XF86TouchpadToggle exec /home/chachi/.config/i3/touchpad-toggle.sh
 
 # Autotiling
 exec_always --no-startup-id autotiling
@@ -730,6 +758,8 @@ bindsym XF86AudioStop exec --no-startup-id playerctl stop
 #################                          xbacklight                                               #################
 #####################################################################################################################
 
+# bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 20 # increase screen brightness
+# bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 20 # decrease screen brightness
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 20 # decrease screen brightness
 
