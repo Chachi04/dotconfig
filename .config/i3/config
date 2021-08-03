@@ -153,6 +153,7 @@ bindsym $super+F11 exec --no-startup-id rofi -show drun -fullscreen -font "Noto 
 
 # start rofi small
 bindsym $super+F12 exec --no-startup-id rofi -show drun -font "Noto Sans 13"
+bindsym Control+Return exec --no-startup-id rofi -show drun -font "Noto Sans 13"
 
 
 
@@ -423,8 +424,13 @@ exec --no-startup-id dex $HOME/.config/autostart/arcolinux-welcome-app.desktop
 exec --no-startup-id xinput disable 16
 bindsym XF86TouchpadToggle exec /home/chachi/.config/i3/touchpad-toggle.sh
 
+# Light-locker
+exec --no-startup-id light-locker
+
 # Autotiling
 exec_always --no-startup-id autotiling
+
+exec --no-startup-id redshift -l 43.84:25.96
 
 #browser
 #exec --no-startup-id vivaldi-stable
@@ -486,7 +492,8 @@ exec --no-startup-id volumeicon
 exec --no-startup-id conky -c ~/.config/i3/system-overview
 
 #feh sets wallpaper
-exec --no-startup-id feh --bg-fill /usr/share/backgrounds/arcolinux/night-glow-5839x3893.jpg &
+# exec --no-startup-id feh --bg-fill /usr/share/backgrounds/arcolinux/night-glow-5839x3893.jpg &
+exec --no-startup-id nitrogen --restore &
 
 #Polybar
 exec_always --no-startup-id ~/.config/polybar/launch.sh &
