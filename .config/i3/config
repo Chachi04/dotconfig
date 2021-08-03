@@ -602,10 +602,10 @@ bindsym $super+F7 exec --no-startup-id virtualbox;focus
 
 #workspace 8 related
 for_window [class="Thunar"] focus
-bindsym $super+F8 exec --no-startup-id thunar;focus
-bindsym $super+Shift+Return exec --no-startup-id thunar;focus
-bindsym $super+Shift+KP_Enter exec --no-startup-id thunar;focus
-bindsym control+$alt+b exec --no-startup-id thunar;focus
+bindsym $super+F8 exec --no-startup-id dolphin;focus
+bindsym $super+Shift+Return exec --no-startup-id dolphin;focus
+bindsym $super+Shift+KP_Enter exec --no-startup-id dolphin;focus
+bindsym control+$alt+b exec --no-startup-id dolphin;focus
 
 #workspace 9 related
 bindsym $super+F9 exec --no-startup-id mailspring;focus
