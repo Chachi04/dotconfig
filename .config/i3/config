@@ -1,4 +1,4 @@
-#####################################################################################################################
+####################################################################################################################
 #####################################################################################################################
 #################                          Start of all the settings                                #################
 #####################################################################################################################
@@ -9,6 +9,7 @@
 
 # $Mod = WINDOWS key or Super key or Mod4
 # Mod1 = ALT key
+# Mod2 = Numlock key
 # Control = CTRL key
 # Shift = SHIFT key
 # Escape = ESCAPE key
@@ -47,6 +48,13 @@ set $down j
 set $left h
 set $right l
 
+#####################################################################################################################
+#################                          Keyboard layouts - us,bg                                 #################
+#####################################################################################################################
+
+# bindsym $super+space exec (setxkbmap -query | grep -q "layout:\s\+us") && setxkbmap bg || setxkbmap us
+# exec --no-startup-id setxkbmap -model pc105 -layout us,bg -variant ,phonetic
+bindsym $super+space exec xkb-switch -n
 
 #####################################################################################################################
 #################                          Single and Dual screen                                   #################
@@ -62,7 +70,7 @@ set $right l
 #exec --no-startup-id xrandr --output DVI-1 --right-of DVI-0 --auto
 #exec --no-startup-id xrandr --output DVI-D-1 --right-of DVI-I-1 --auto
 #exec --no-startup-id xrandr --output HDMI-2 --right-of HDMI-1 --auto
-exec --no-startup-id xrandr --output HDMI1 --right-of eDP-1 --auto
+exec --no-startup-id xrandr --output HDMI-1 --right-of eDP-1 --auto
 
 
 # my current setup
@@ -75,6 +83,7 @@ workspace 2 output $firstMonitor
 workspace 3 output $firstMonitor
 workspace 4 output $firstMonitor
 workspace 5 output $firstMonitor
+
 workspace 6 output $secondMonitor
 workspace 7 output $secondMonitor
 workspace 8 output $secondMonitor
@@ -136,8 +145,9 @@ bindsym $super+Shift+Mod2+KP_Insert move container to workspace 10
 #####################################################################################################################
 
 # start dmenu
-bindsym $super+shift+d exec --no-startup-id dmenu_run -i -nb '#191919' -nf '#fea63c' -sb '#fea63c' -sf '#191919' -fn 'NotoMonoRegular:bold:pixelsize=14'
-bindsym $super+d exec --no-startup-id dmenu_run -i -nb '#191919' -nf '#fea63c' -sb '#fea63c' -sf '#191919' -fn 'NotoMonoRegular:bold:pixelsize=14'
+bindsym $super+equal exec --no-startup-id dmenu_run -i --nb '#191919' --nf '#fea63c' --sb '#fea63c' --sf '#191919' --font 'FiraCode Nerd Font Mono:bold:pixelsize=14' --render_minheight 30 --calc
+bindsym $super+shift+d exec --no-startup-id dmenu_run -i --nb '#191919' --nf '#fea63c' --sb '#fea63c' --sf '#191919' --font 'FiraCode Nerd Font Mono:bold:pixelsize=14' --render_minheight 30 --calc
+bindsym $super+d exec --no-startup-id dmenu_run -i -f --nb '#191919' --nf '#fea63c' --sb '#fea63c' --sf '#191919' --font 'FiraCode Nerd Font Mono:bold:pixelsize=14' --render_minheight 30 -p "Dmenu"
 
 # start xfce4-appfinder
 bindsym $alt+F2 exec --no-startup-id xfce4-appfinder --collapsed
@@ -153,8 +163,9 @@ bindsym $super+F11 exec --no-startup-id rofi -show drun -fullscreen -font "Noto 
 
 # start rofi small
 bindsym $super+F12 exec --no-startup-id rofi -show drun -font "Noto Sans 13"
-bindsym Control+Return exec --no-startup-id rofi -show drun -font "Noto Sans 13"
-
+# bindsym Control+Return exec --no-startup-id rofi -show drun -font "Noto Sans 13"
+# bindsym Control+Return exec --no-startup-id dmenu_run -i -h 30 -nb '#2F343F' -sb '#fea63c' -fn 'NotoMonoRegular:bold:pixelsize=14'
+# bindsym $super+space exec --no-startup-id dmenu_run -i -h 30 -nb '#191919' -nf '#fea63c' -sb '#fea63c' -sf '#191919' -fn 'NotoMonoRegular:bold:pixelsize=14'
 
 
 #####################################################################################################################
@@ -267,9 +278,6 @@ bindsym $alt+Ctrl+Left workspace prev
 for_window [urgent=latest] focus
 
 
-
-
-
 #####################################################################################################################
 #################                          Tiling parameters                                        #################
 #####################################################################################################################
@@ -289,13 +297,13 @@ bindsym $super+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 # qwerty/azerty issue for letter z
-bindsym $super+s layout stacking
-bindsym $super+z layout tabbed
+# bindsym $super+s layout stacking
+# bindsym $super+z layout tabbed
 bindsym $super+e layout toggle split
 
 
 # change focus between tiling / floating windows
-bindsym $super+space focus mode_toggle
+# bindsym $super+space focus mode_toggle
 
 # focus the parent container
 # bindsym $super+a focus parent
@@ -373,12 +381,13 @@ font pango:Noto Mono Regular 13
 # you can find the class with the program xprop
 
 # Workspace 1 browser related
-#assign [class="Firefox|Vivaldi-stable|Vivaldi-snapshot|Opera"]                      → 1
-#assign [class="Chromium|Google-chrome"]                                             → 1
+# assign [class="Firefox|Vivaldi-stable|Vivaldi-snapshot|Opera"]                      → 1
+# assign [class="Chromium|Google-chrome"]                                             → 1
+# assign [class="Brave-browser|Alacritty"]                                              → 1
 
 # Workspace 2 text editor related
 #assign [class="sublime-text|sublime_text|Sublime_text|subl|Subl|subl3|Subl3"]       → 2
-#assign [class="Xed|xed|Brackets|Atom|Code|Geany"]                                   → 2
+assign [class="Code|code|Emacs|emacs"]                                   → 2
 
 # Workspace 3 Inkscape
 #assign [class="Inkscape"]                                                           → 3
@@ -401,10 +410,10 @@ font pango:Noto Mono Regular 13
 #assign [class="Nemo|Thunar|Caja|nautilus|Nautilus"]                                 → 8
 
 # Workspace 9 email clients
-#assign [class="Geary|Evolution"]                                                    → 9
+assign [class="Mailspring|mailspring|discord"]                                                    → 9
 
 # Workspace 10 music related
-#assign [class="Spotify|spotify"]                                                    → 10
+assign [class="Spotify|spotify"]                                                    → 10
 #fix for spotify not moving to workspace 10
 #for_window [class="Spotify"] move to workspace 10
 
@@ -421,15 +430,16 @@ font pango:Noto Mono Regular 13
 exec --no-startup-id dex $HOME/.config/autostart/arcolinux-welcome-app.desktop
 
 # Touchpad
-exec --no-startup-id xinput disable 16
+exec --no-startup-id xinput --set-prop "ELAN1200:00 04F3:3090 Touchpad" "Device Enabled" 0
 bindsym XF86TouchpadToggle exec /home/chachi/.config/i3/touchpad-toggle.sh
 
 # Light-locker
-exec --no-startup-id light-locker
+# exec --no-startup-id light-locker
 
 # Autotiling
 exec_always --no-startup-id autotiling
 
+# Redshift
 exec --no-startup-id redshift -l 43.84:25.96
 
 #browser
@@ -464,7 +474,7 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 exec --no-startup-id pamac-tray
 
 # bluetooth
-#exec --no-startup-id blueberry-tray
+exec --no-startup-id blueberry-tray
 
 # network
 exec --no-startup-id nm-applet
@@ -520,6 +530,9 @@ bindsym control+$alt+w exec --no-startup-id arcolinux-welcome-app
 #ArcoLinux Tweak Tool
 bindsym control+$alt+e exec --no-startup-id arcolinux-tweak-tool
 
+# Obsidian
+bindsym $super+o exec obsidian-insider
+
 #conky
 bindsym $super+c exec --no-startup-id conky-toggle
 bindsym control+$alt+Next exec --no-startup-id conky-rotate -n
@@ -551,6 +564,7 @@ bindsym control+$alt+r exec --no-startup-id rofi-theme-selector
 
 #arcolinux conflict
 #bindsym $super+m exec --no-startup-id pragha;focus
+bindsym $super+m exec --no-startup-id mailspring;focus
 
 #htop
 #arcolinux conflict
@@ -602,10 +616,10 @@ bindsym $super+F7 exec --no-startup-id virtualbox;focus
 
 #workspace 8 related
 for_window [class="Thunar"] focus
-bindsym $super+F8 exec --no-startup-id dolphin;focus
-bindsym $super+Shift+Return exec --no-startup-id dolphin;focus
-bindsym $super+Shift+KP_Enter exec --no-startup-id dolphin;focus
-bindsym control+$alt+b exec --no-startup-id dolphin;focus
+bindsym $super+F8 exec --no-startup-id thunar;focus
+bindsym $super+Shift+Return exec --no-startup-id thunar;focus
+bindsym $super+Shift+KP_Enter exec --no-startup-id thunar;focus
+bindsym control+$alt+b exec --no-startup-id thunar;focus
 
 #workspace 9 related
 bindsym $super+F9 exec --no-startup-id mailspring;focus
@@ -639,7 +653,7 @@ bindsym Control+Shift+Print exec --no-startup-id gnome-screenshot -i
 
 
 #floating enabled from some programs - find with xprop
-
+# for_window [name="Android Emulator - Pixel_4a_API_30:5554"] floating enable
 for_window [class="Arcolinux-welcome-app.py"] floating enable
 #for_window [class="Arcolinux-tweak-tool.py"] floating enable
 for_window [class="Arcolinux-calamares-tool.py"] floating enable
@@ -675,6 +689,7 @@ for_window [instance="script-fu"] border normal
 for_window [instance="variety"] floating disable
 
 
+for_window [title=".*Emulator.*"] floating enable
 for_window [title="Copying"] floating enable
 for_window [title="Deleting"] floating enable
 for_window [title="Moving"] floating enable
@@ -770,6 +785,11 @@ bindsym XF86AudioStop exec --no-startup-id playerctl stop
 bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -dec 20 # decrease screen brightness
 
+#####################################################################################################################
+#################                          calculator                                               #################
+#####################################################################################################################
+
+# bindsym XF86Calculator exec --no-startup-id galculator
 
 
 #####################################################################################################################
