@@ -48,8 +48,8 @@ format-offset =
 
 [colors]
 ; Nord theme ============
-; background = #2F343F
-; foreground = #f3f4f5
+ background = #252932
+ foreground = #f3f4f5
 ; alert = #d08770
 ; volume-min = #a3be8c
 ; volume-med = #ebcb8b
@@ -77,8 +77,8 @@ format-offset =
 ;alert = #bd2c40
 
 ; Pywal theme ==========
-background = ${xrdb:color0:#222}
-foreground = ${xrdb:color7:#222}
+;background = ${xrdb:color0:#222}
+;foreground = ${xrdb:color7:#222}
 ;foreground-alt = ${xrdb:color7:#222}
 ;primary = ${xrdb:color1:#222}
 ;secondary = ${xrdb:color2:#222}
@@ -142,7 +142,7 @@ font-3 = "Noto Sans Mono:size=10;0"
 ;modules-right = memory2 cpu2 date
 
 modules-left = i3 xwindow
-modules-center = date
+modules-center = popup-calendar
 modules-right = memory2 cpu2 backlight xkeyboard pavolume battery
 ;modules-right = memory2 cpu2 redshift backlight caffeine xkeyboard pavolume battery
 
@@ -1194,7 +1194,7 @@ ws-icon-5 = 6;
 ws-icon-6 = 7;
 ws-icon-7 = 8;
 ws-icon-8 = 9;
-ws-icon-9 = 10;
+ws-icon-9 = 10;
 ws-icon-default = ""
 
 
@@ -1372,6 +1372,7 @@ format-underline = #FFBB00
 inherit = module/xbacklight
 type = internal/backlight
 card = intel_backlight
+enable-scroll = true
 format-foreground = ${colors.foreground}
 format-background = ${colors.background}
 format-prefix-foreground = #7D49B6
@@ -1578,7 +1579,7 @@ type = internal/date
 interval = 5
 ; See "http://en.cppreference.com/w/cpp/io/manip/put_time" for details on how to format the date string
 ; NOTE: if you want to use syntax tags here you need to use %%{...}
-date = " %Y-%m-%d%"
+date = " %d-%m-%Y"
 date-alt = " %d-%m-%Y"
 time = %H:%M
 time-alt = %H:%M
@@ -1927,6 +1928,19 @@ format-foreground = ${colors.foreground}
 format-background = ${colors.background}
 
 
+
+################################################################################
+
+[module/popup-calendar]
+type = custom/script
+exec = ~/.config/polybar/scripts/launch-calendar.sh
+interval = 5
+click-left = ~/.config/polybar/scripts/launch-calendar.sh --popup &
+format-prefix = "  "
+format-prefix-foreground = #c1941a
+format-underline = #c1941a
+format-foreground = ${colors.foreground}
+format-background = ${colors.background}
 
 ################################################################################
 
