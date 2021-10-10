@@ -1,0 +1,183 @@
+#+TITLE: My Doom Emacs Config
+#+AUTHOR: Jiaqi Wang
+#+PROPERTY: header-args :tangle config.el
+
+* TABLE OF CONTENTS :toc:
+- [[#about-this-config][ABOUT THIS CONFIG]]
+- [[#macros][MACROS]]
+- [[#doom-account][DOOM ACCOUNT]]
+- [[#fonts][FONTS]]
+- [[#appearance][APPEARANCE]]
+  - [[#theme][Theme]]
+  - [[#transparency][Transparency]]
+  - [[#relative-linenumbers][Relative linenumbers]]
+  - [[#treemacs][TREEMACS]]
+  - [[#treesitter][TREESITTER]]
+- [[#org-mode][ORG MODE]]
+- [[#ligatures][Ligatures]]
+- [[#vim-escape][Vim Escape]]
+- [[#lines][LINES]]
+- [[#substitution][SUBSTITUTION]]
+- [[#cursor][CURSOR]]
+- [[#lsp-ignores][LSP IGNORES]]
+- [[#input-methods][INPUT METHODS]]
+- [[#other][OTHER]]
+
+* ABOUT THIS CONFIG
+This is my personal configuration. There is no need to run 'doom sync' after modifying this file.
+
+* MACROS
+Here are some additional functions/macros that could help configure Doom:
++ `load!' for loading external *.el files relative to this one
++ `use-package!' for configuring packages
++ `after!' for running code after a package has loaded
++ `add-load-path!' for adding directories to the `load-path', relative to this file. Emacs searches the `load-path' when you load packages with
++ `require' or `use-package'.
++ `map!' for binding new keys
+
+* DOOM ACCOUNT
+Some functionality uses this to identify you, e.g. GPG configuration, email clients, file templates and snippets.
+#+begin_src emacs-lisp
+(setq user-full-name "Jiaqi Wang"
+      user-mail-address "w.jiaqi004@gmail.com")
+#+end_src
+
+* FONTS
+Settings related to fonts. Doom exposes five (optional) variables for controlling fonts.
++ 'doom-font' - standard monospace font that is used for most things in Emacs.
++ 'doom-variable-pitch-font' - variable font which is useful in some Emacs plugins.
++ 'doom-big-font' - used in doom-big-font-mode; useful for presentations.
++ 'font-lock-comment-face' - for comments.
++ 'font-lock-keyword-face' - for keywords with special significance like 'setq' in elisp.
++ 'gloaal-prerigy-symbols-mode' - change certain keywords to symbols, such as lambda
+They all accept either a font-spec, font string ("Input Mono-12"), or xlfd font string.
+#+begin_src emacs-lisp
+(setq doom-font (font-spec :family "FiraCode Nerd Font Mono" :size 15)
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
+      doom-big-font (font-spec :family "FiraCode Nerd Font Mono" :size 24))
+#+end_src
+* APPEARANCE
+** Theme
+Setting the theme to doom-palenight. To try out new themes use 'SPC h t'.
+#+begin_src emacs-lisp
+(setq doom-theme 'doom-palenight)
+#+end_src
+
+** Transparency
+Enable transparent background.
+#+begin_src emacs-lisp
+(set-frame-parameter (selected-frame)'alpha '(90 . 90))
+(add-to-list 'default-frame-alist'(alpha . (90 . 90)))
+#+end_src
+
+** Relative linenumbers
+#+begin_src emacs-lisp
+(setq display-line-numbers-type 'relative)
+#+end_src
+
+** TREEMACS
+Setting the theme of treemacs to doom-colors. Change default width.
+#+begin_src emacs-lisp
+(setq doom-themes-treemacs-theme 'doom-colors)
+(setq treemacs-width 25)
+#+end_src
+
+** TREESITTER
+#+begin_src emacs-lisp
+(use-package! tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (pushnew! tree-sitter-major-mode-language-alist'
+            '(scss-mode . css))
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+#+end_src
+
+* ORG MODE
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "Org Babel tangle" "m B" #'org-babel-tangle)
+(after! org
+  ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  (setq org-directory "~/org/"
+        org-agenda-files '("~/org/agenda.org")
+        org-default-notes-file (expand-file-name "notes.org" org-directory)
+        org-ellipsis " ▼ "
+        org-log-done 'time
+        ;; org-hide-emphasis-markers t
+        )
+  )
+#+end_src
+
+* Ligatures
+Fixing ligatures
+#+begin_src emacs-lisp
+(use-package fira-code-mode
+  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::")) ;; List of ligatures to turn off
+  :hook prog-mode lsp-mode org-mode) ;; Enables fira-code-mode automatically for programming major modes
+#+end_src
+
+* Vim Escape
+Use C-c like in vim.
+#+begin_src emacs-lisp
+;; TODO replace C-c prefix with something else so that no functionality is lost
+(map! :map evil-insert-state-map "C-c" 'evil-normal-state)
+(map! :map evil-normal-state-map "C-c" 'evil-normal-state)
+#+end_src
+
+* LINES
+Set line numbers to ralative for easy jumps. Set C-/ to toggle comment. Moving line(s) up/down with M-j/M-k
+#+begin_src emacs-lisp
+(map! :desc "Comment or uncomment current line"
+      "C-/" #'comment-line)
+(map! :desc "Drag selected line up"
+      "M-k" #'drag-stuff-up)
+(map! :desc "Drag selected line down"
+      "M-j" #'drag-stuff-down)
+#+end_src
+
+* SUBSTITUTION
+Rest s/S's behaviour to substitution
+#+begin_src emacs-lisp
+(remove-hook 'doom-first-input-hook #'evil-snipe-mode)
+#+end_src
+
+* CURSOR
+Tired of the cursor going back when exiting insert mode? Worry no more!
+#+begin_src emacs-lisp
+(setq evil-move-cursor-back nil)
+#+end_src
+
+* LSP IGNORES
+#+begin_src emacs-lisp
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\vendor\\'")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\node_modules\\'"))
+  ;; (add-to-list 'lsp-file-watch-ignored-files "[/\\\\]\\.my-files\\'"))
+#+end_src
+
+* INPUT METHODS
+Adding Bulgarian Phonetic input method
+#+begin_src emacs-lisp
+(setq default-input-method "bulgarian-phonetic")
+(map! :leader
+      :desc "Toggle input method" "t i" #'toggle-input-method)
+;; (global-set-key [(super space)] 'toggle-input-method)
+#+end_src
+
+* OTHER
+#+begin_src emacs-lisp
+(map! :desc "Select completion with TAB"
+      :map company-active-map
+      "<tab>" #'company-complete-selection)
+
+;; FIXME
+(map! :desc "Search directory"
+      "C-p" #'projectile-find-file)
+
+;; FIXME
+(map! :desc "Toggle Treemacs"
+      "C-n" #'+treemacs/toggle)
+
+;; FIXME Temporary disable pretty-mode till ligatures are fixed
+#+end_src

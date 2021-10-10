@@ -52,3 +52,4 @@
 ;; (package! evil-tutor)
 (package! tree-sitter)
 (package! tree-sitter-langs)
+(package! fira-code-mode)
