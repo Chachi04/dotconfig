@@ -76,7 +76,7 @@ exec --no-startup-id xrandr --output HDMI-1 --right-of eDP-1 --auto
 # my current setup
 
 set $firstMonitor eDP-1
-set $secondMonitor HDMI1
+set $secondMonitor HDMI-1
 
 workspace 1 output $firstMonitor
 workspace 2 output $firstMonitor
@@ -299,7 +299,7 @@ bindsym $super+f fullscreen toggle
 # qwerty/azerty issue for letter z
 # bindsym $super+s layout stacking
 # bindsym $super+z layout tabbed
-bindsym $super+e layout toggle split
+# bindsym $super+e layout toggle split
 
 
 # change focus between tiling / floating windows
@@ -399,6 +399,7 @@ assign [class="Code|code|Emacs|emacs"]                                   → 2
 #assign [class="ristretto|Ristretto|shotwell|Shotwell|Xviewer|Nitrogen"]             → 5
 #assign [class="feh|gthumb|Gthumb|eog|Eog|Pinta|pixeluvo|Pixeluvo"]                  → 5
 #assign [class="Meld"]                                                               → 5
+assign [class="Nitrogen|nitrogen"]                                                               → 5
 
 # Workspace 6 all video related software
 #assign [class="Vlc|vlc"]                                                            → 6
@@ -415,7 +416,7 @@ assign [class="Mailspring|mailspring|discord"]                                  
 # Workspace 10 music related
 assign [class="Spotify|spotify"]                                                    → 10
 #fix for spotify not moving to workspace 10
-#for_window [class="Spotify"] move to workspace 10
+for_window [class="Spotify"] move to workspace 10
 
 
 
@@ -499,7 +500,7 @@ exec --no-startup-id volumeicon
 #exec --no-startup-id xfce4-clipman
 
 #Conky
-exec --no-startup-id conky -c ~/.config/i3/system-overview
+# exec --no-startup-id conky -c ~/.config/i3/system-overview
 
 #feh sets wallpaper
 # exec --no-startup-id feh --bg-fill /usr/share/backgrounds/arcolinux/night-glow-5839x3893.jpg &
@@ -524,6 +525,9 @@ exec --no-startup-id /usr/lib/xfce4/notifyd/xfce4-notifyd &
 
 #not workspace related
 
+#Emacs
+bindsym $super+e exec --no-startup-id emacs
+
 #ArcoLinux Welcome App
 bindsym control+$alt+w exec --no-startup-id arcolinux-welcome-app
 
@@ -531,7 +535,7 @@ bindsym control+$alt+w exec --no-startup-id arcolinux-welcome-app
 bindsym control+$alt+e exec --no-startup-id arcolinux-tweak-tool
 
 # Obsidian
-bindsym $super+o exec obsidian-insider
+bindsym $super+o exec obsidian
 
 #conky
 bindsym $super+c exec --no-startup-id conky-toggle
@@ -701,6 +705,7 @@ for_window [window_role="pop-up"] floating enable
 for_window [window_role="^Preferences$"] floating enable
 for_window [window_role="setup"] floating enable
 
+for_window [class="Yad" title="yad-calendar"] floating enable
 
 
 
