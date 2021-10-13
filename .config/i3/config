@@ -159,10 +159,10 @@ bindsym $alt+F3 exec --no-startup-id xfce4-appfinder
 #bindsym $alt+F5 exec --no-startup-id xlunch --config ~/.config/xlunch/default.conf --input ~/.config/xlunch/entries.dsv
 
 # start rofi full
-bindsym $super+F11 exec --no-startup-id rofi -show drun -fullscreen -font "Noto Sans 13"
+# bindsym $super+F11 exec --no-startup-id rofi -show drun -fullscreen -font "Noto Sans 13"
 
 # start rofi small
-bindsym $super+F12 exec --no-startup-id rofi -show drun -font "Noto Sans 13"
+# bindsym $super+F12 exec --no-startup-id rofi -show drun -font "Noto Sans 13"
 # bindsym Control+Return exec --no-startup-id rofi -show drun -font "Noto Sans 13"
 # bindsym Control+Return exec --no-startup-id dmenu_run -i -h 30 -nb '#2F343F' -sb '#fea63c' -fn 'NotoMonoRegular:bold:pixelsize=14'
 # bindsym $super+space exec --no-startup-id dmenu_run -i -h 30 -nb '#191919' -nf '#fea63c' -sb '#fea63c' -sf '#191919' -fn 'NotoMonoRegular:bold:pixelsize=14'
@@ -405,7 +405,7 @@ assign [class="Nitrogen|nitrogen"]                                              
 #assign [class="Vlc|vlc"]                                                            → 6
 
 # Workspace 7 virtual machines and settings
-#assign [class="Vmplayer|VirtualBox"]						    → 7
+assign [class="Microsoft Teams - Preview|microsoft teams - preview|VirtualBox"]						    → 7
 
 # Workspace 8 file managers
 #assign [class="Nemo|Thunar|Caja|nautilus|Nautilus"]                                 → 8
@@ -564,7 +564,7 @@ bindsym control+$alt+k exec --no-startup-id arcolinux-logout
 bindsym control+$alt+l exec --no-startup-id arcolinux-logout
 
 #rofi theme selector
-bindsym control+$alt+r exec --no-startup-id rofi-theme-selector
+# bindsym control+$alt+r exec --no-startup-id rofi-theme-selector
 
 #arcolinux conflict
 #bindsym $super+m exec --no-startup-id pragha;focus
@@ -645,6 +645,7 @@ bindsym control+$alt+s exec --no-startup-id spotify;focus
 bindsym Print exec --no-startup-id scrot 'ArcoLinux-%Y-%m-%d-%s_screenshot_$wx$h.jpg' -e 'mv $f $$(xdg-user-dir PICTURES)'
 bindsym Control+Print exec --no-startup-id xfce4-screenshooter
 bindsym Control+Shift+Print exec --no-startup-id gnome-screenshot -i
+bindsym $super+Shift+s exec --no-startup-id maim --select | xclip -selection clipboard -target image/png
 #bindsym shift+Print exec --no-startup-id shutter
 
 
