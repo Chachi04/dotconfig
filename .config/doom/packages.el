@@ -14,7 +14,9 @@
 ;; https://github.com/raxod502/straight.el#the-recipe-format
 ;(package! another-package
 ;  :recipe (:host github :repo "username/repo"))
-
+(package! aas
+   :recipe (:host github :repo "ymarco/auto-activating-snippets")
+   :pin "1699bec4d244a1f62af29fe4eb8b79b6d2fccf7d")
 ;; If the package you are trying to install does not contain a PACKAGENAME.el
 ;; file, or is located in a subdirectory of the repo, you'll need to specify
 ;; `:files' in the `:recipe':
@@ -25,6 +27,7 @@
 ;; If you'd like to disable a package included with Doom, you can do so here
 ;; with the `:disable' property:
 ;(package! builtin-package :disable t)
+(package! evil-escape :disable t)
 
 ;; You can override the recipe of a built in package without having to specify
 ;; all the properties for `:recipe'. These will inherit the rest of its recipe
@@ -49,7 +52,6 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-;; (package! evil-tutor)
 (package! tree-sitter)
 (package! tree-sitter-langs)
 (package! fira-code-mode)

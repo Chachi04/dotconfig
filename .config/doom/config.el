@@ -23,29 +23,11 @@
             '(scss-mode . css))
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
-(defun my/org-mode/load-prettify-symbols () "Prettify org mode keywords"
-  (interactive)
-  (setq prettify-symbols-alist
-    (mapcan (lambda (x) (list x (cons (upcase (car x)) (cdr x))))
-          '(("#+begin_src" . ?)
-            ("#+end_src" . ?)
-            ("#+begin_example" . ?)
-            ("#+end_example" . ?)
-            ("#+DATE:" . ?⏱)
-            ("#+AUTHOR:" . ?✏)
-            ("[ ]" .  ?☐)
-            ("[X]" . ?☑ )
-            ("[-]" . ?❍ )
-            ("lambda" . ?λ)
-            ("#+header:" . ?)
-            ("#+name:" . ?﮸)
-            ("#+results:" . ?)
-            ("#+call:" . ?)
-            (":properties:" . ?)
-            (":logbook:" . ?))))
-  (prettify-symbols-mode 1))
 (map! :leader
       :desc "Org Babel tangle" "m B" #'org-babel-tangle)
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-superstar-prettify-item-bullets t))
 (after! org
   ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   (setq org-directory "~/org/"
@@ -54,12 +36,21 @@
         org-ellipsis " ▼ "
         org-log-done 'time
         ;; org-hide-emphasis-markers t
-        )
-  )
+        ))
+(appendq! +ligatures-extra-symbols
+          `(:checkbox      "☐"
+            :pending       "◼"
+            :checkedbox    "☑"
+            ))
+(set-ligatures! 'org-mode
+  :merge t
+  :checkbox      "[ ]"
+  :pending       "[-]"
+  :checkedbox    "[X]")
 
 (use-package fira-code-mode
-  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::")) ;; List of ligatures to turn off
-  :hook prog-mode lsp-mode org-mode) ;; Enables fira-code-mode automatically for programming major modes
+  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x")) ;; List of ligatures to turn off
+  :hook prog-mode) ;; Enables fira-code-mode automatically for programming major modes
 
 ;; TODO replace C-c prefix with something else so that no functionality is lost
 (map! :map evil-insert-state-map "C-c" 'evil-normal-state)
@@ -99,3 +90,32 @@
       "C-n" #'+treemacs/toggle)
 
 ;; FIXME Temporary disable pretty-mode till ligatures are fixed
+
+(setq delete-by-moving-to-trash t
+      undo-limit 80000000
+      evil-want-fine-undo t
+      truncate-string-ellipsis "…"
+      scroll-margin 10
+      )
+
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window=split evil-window-vsplit)
+  (consult-buffer))
+
+(after! company
+  (setq company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+
+(setq projectile-ignored-projects '("~/" "/tmp" "~/.emacs.d" "~/.emacs.d/.local/straight/repos/"))
+(defun projectile-ignored-project-function (filepath)
+  "Return t if FILEPATH is within any of `projectile-ignored-projects'"
+  (or (mapcar (lambda (p) (s-starts-with-p p filepath)) projectile-ignored-projects)))
+
+(use-package! aas
+  :commands aas-mode)
+
+(setq yas-triggers-in-field t)

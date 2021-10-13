@@ -5,7 +5,7 @@
 * TABLE OF CONTENTS :toc:
 - [[#about-this-config][ABOUT THIS CONFIG]]
 - [[#macros][MACROS]]
-- [[#doom-account][DOOM ACCOUNT]]
+- [[#personal-information][Personal Information]]
 - [[#fonts][FONTS]]
 - [[#appearance][APPEARANCE]]
   - [[#theme][Theme]]
@@ -22,6 +22,8 @@
 - [[#lsp-ignores][LSP IGNORES]]
 - [[#input-methods][INPUT METHODS]]
 - [[#other][OTHER]]
+- [[#doom-configuration][Doom configuration]]
+  - [[#better-defautls][Better defautls]]
 
 * ABOUT THIS CONFIG
 This is my personal configuration. There is no need to run 'doom sync' after modifying this file.
@@ -35,7 +37,7 @@ Here are some additional functions/macros that could help configure Doom:
 + `require' or `use-package'.
 + `map!' for binding new keys
 
-* DOOM ACCOUNT
+* Personal Information
 Some functionality uses this to identify you, e.g. GPG configuration, email clients, file templates and snippets.
 #+begin_src emacs-lisp
 (setq user-full-name "Jiaqi Wang"
@@ -56,6 +58,8 @@ They all accept either a font-spec, font string ("Input Mono-12"), or xlfd font 
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 15)
       doom-big-font (font-spec :family "FiraCode Nerd Font Mono" :size 24))
 #+end_src
+
+
 * APPEARANCE
 ** Theme
 Setting the theme to doom-palenight. To try out new themes use 'SPC h t'.
@@ -97,6 +101,9 @@ Setting the theme of treemacs to doom-colors. Change default width.
 #+begin_src emacs-lisp
 (map! :leader
       :desc "Org Babel tangle" "m B" #'org-babel-tangle)
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-superstar-prettify-item-bullets t))
 (after! org
   ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
   (setq org-directory "~/org/"
@@ -105,17 +112,26 @@ Setting the theme of treemacs to doom-colors. Change default width.
         org-ellipsis " ▼ "
         org-log-done 'time
         ;; org-hide-emphasis-markers t
-        )
-  )
+        ))
+(appendq! +ligatures-extra-symbols
+          `(:checkbox      "☐"
+            :pending       "◼"
+            :checkedbox    "☑"
+            ))
+(set-ligatures! 'org-mode
+  :merge t
+  :checkbox      "[ ]"
+  :pending       "[-]"
+  :checkedbox    "[X]")
 #+end_src
 
 * Ligatures
-Fixing ligatures
 #+begin_src emacs-lisp
 (use-package fira-code-mode
-  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::")) ;; List of ligatures to turn off
-  :hook prog-mode lsp-mode org-mode) ;; Enables fira-code-mode automatically for programming major modes
+  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x")) ;; List of ligatures to turn off
+  :hook prog-mode) ;; Enables fira-code-mode automatically for programming major modes
 #+end_src
+
 
 * Vim Escape
 Use C-c like in vim.
@@ -165,6 +181,7 @@ Adding Bulgarian Phonetic input method
 ;; (global-set-key [(super space)] 'toggle-input-method)
 #+end_src
 
+
 * OTHER
 #+begin_src emacs-lisp
 (map! :desc "Select completion with TAB"
@@ -180,4 +197,55 @@ Adding Bulgarian Phonetic input method
       "C-n" #'+treemacs/toggle)
 
 ;; FIXME Temporary disable pretty-mode till ligatures are fixed
+#+end_src
+
+* Doom configuration
+** Better defautls
+This parts follow the configuration found on [https://tecosaur.github.io/emacs-config/config.html]
+*** Simple settings
+Unicaode ellipsis are nicer than "...", and also save space.
+Keep some space when scrolling.
+#+begin_src emacs-lisp
+(setq delete-by-moving-to-trash t
+      undo-limit 80000000
+      evil-want-fine-undo t
+      truncate-string-ellipsis "…"
+      scroll-margin 10
+      )
+#+end_src
+*** Windows
+#+begin_src emacs-lisp
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window=split evil-window-vsplit)
+  (consult-buffer))
+#+end_src
+
+*** Company
+#+begin_src emacs-lisp
+(after! company
+  (setq company-show-numbers t)
+  (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
+#+end_src
+
+*** Projectile
+#+begin_src emacs-lisp
+(setq projectile-ignored-projects '("~/" "/tmp" "~/.emacs.d" "~/.emacs.d/.local/straight/repos/"))
+(defun projectile-ignored-project-function (filepath)
+  "Return t if FILEPATH is within any of `projectile-ignored-projects'"
+  (or (mapcar (lambda (p) (s-starts-with-p p filepath)) projectile-ignored-projects)))
+#+end_src
+
+*** Aas mode (auto snippets)
+#+begin_src emacs-lisp
+(use-package! aas
+  :commands aas-mode)
+#+end_src
+
+*** Yas
+#+begin_src emacs-lisp
+(setq yas-triggers-in-field t)
 #+end_src
