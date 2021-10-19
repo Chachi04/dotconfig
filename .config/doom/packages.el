@@ -28,6 +28,12 @@
 ;; with the `:disable' property:
 ;(package! builtin-package :disable t)
 (package! evil-escape :disable t)
+(package! evil-lion :disable t)
+(package! evil-exchange :disable t)
+(package! evil-easymotion :disable t)
+(package! evil-indent-plus :disable t)
+(package! evil-vimish-fold :disable t)
+(package! evil-visualstar :disable t)
 
 ;; You can override the recipe of a built in package without having to specify
 ;; all the properties for `:recipe'. These will inherit the rest of its recipe
@@ -52,6 +58,6 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! tree-sitter)
-(package! tree-sitter-langs)
+;; (package! tree-sitter)
+;; (package! tree-sitter-langs)
 (package! fira-code-mode)

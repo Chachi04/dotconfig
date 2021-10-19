@@ -15,13 +15,13 @@
 (setq doom-themes-treemacs-theme 'doom-colors)
 (setq treemacs-width 25)
 
-(use-package! tree-sitter
-  :config
-  (require 'tree-sitter-langs)
-  (global-tree-sitter-mode)
-  (pushnew! tree-sitter-major-mode-language-alist'
-            '(scss-mode . css))
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+;; (use-package! tree-sitter
+;;   :config
+;;   (require 'tree-sitter-langs)
+;;   (global-tree-sitter-mode)
+;;   (pushnew! tree-sitter-major-mode-language-alist'
+;;             '(scss-mode . css))
+;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 (map! :leader
       :desc "Org Babel tangle" "m B" #'org-babel-tangle)
@@ -37,27 +37,19 @@
         org-log-done 'time
         ;; org-hide-emphasis-markers t
         ))
-(appendq! +ligatures-extra-symbols
-          `(:checkbox      "☐"
-            :pending       "◼"
-            :checkedbox    "☑"
-            ))
-(set-ligatures! 'org-mode
-  :merge t
-  :checkbox      "[ ]"
-  :pending       "[-]"
-  :checkedbox    "[X]")
 
-(use-package fira-code-mode
-  :custom (fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x")) ;; List of ligatures to turn off
-  :hook prog-mode) ;; Enables fira-code-mode automatically for programming major modes
+(require 'fira-code-mode)
+(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::")) ;; List of ligatures to turn off
+(add-hook 'prog-mode-hook (lambda ()
+                            (unless (eq major-mode 'web-mode)
+                            (fira-code-mode))))
 
 ;; TODO replace C-c prefix with something else so that no functionality is lost
 (map! :map evil-insert-state-map "C-c" 'evil-normal-state)
 (map! :map evil-normal-state-map "C-c" 'evil-normal-state)
 
 (map! :desc "Comment or uncomment current line"
-      "C-/" #'comment-line)
+    "C-/" #'comment-line)
 (map! :desc "Drag selected line up"
       "M-k" #'drag-stuff-up)
 (map! :desc "Drag selected line down"
@@ -75,21 +67,16 @@
 (setq default-input-method "bulgarian-phonetic")
 (map! :leader
       :desc "Toggle input method" "t i" #'toggle-input-method)
-;; (global-set-key [(super space)] 'toggle-input-method)
 
-(map! :desc "Select completion with TAB"
-      :map company-active-map
-      "<tab>" #'company-complete-selection)
+(map! :leader
+      :desc "Increment at pointer"
+      :map evil-normal-state-map
+      "=" #'evil-numbers/inc-at-pt)
 
-;; FIXME
-(map! :desc "Search directory"
-      "C-p" #'projectile-find-file)
-
-;; FIXME
-(map! :desc "Toggle Treemacs"
-      "C-n" #'+treemacs/toggle)
-
-;; FIXME Temporary disable pretty-mode till ligatures are fixed
+(map! :leader
+      :desc "Decrement at pointer"
+      :map evil-normal-state-map
+      "-" #'evil-numbers/dec-at-pt)
 
 (setq delete-by-moving-to-trash t
       undo-limit 80000000
@@ -103,9 +90,13 @@
 (defadvice! prompt-for-buffer (&rest _)
   :after '(evil-window=split evil-window-vsplit)
   (consult-buffer))
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window=split evil-window-split)
+  (consult-buffer))
 
 (after! company
-  (setq company-show-numbers t)
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2)
   (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
 (setq-default history-length 1000)
 (setq-default prescient-history-length 1000)
@@ -119,3 +110,20 @@
   :commands aas-mode)
 
 (setq yas-triggers-in-field t)
+
+;; (with-eval-after-load 'evil-nerd-commenter
+;;   (defun my-comment-or-uncomment-region (beg end)
+;;     (let* ((comment-start "{--")
+;;            (comment-end "bbb"))
+;;       (evilnc-comment-or-uncomment-region-internal beg end)))
+;;   (setq evilnc-comment-or-uncomment-region-function
+;;         'my-comment-or-uncomment-region))
+;; (add-to-list 'auto-mode-alist
+;;              '("\\.blade.php\\'" . (lambda ()
+;;                 ;; add major mode setting here, if needed, for example:
+;;                 ;; (text-mode)
+;;                 (set (make-local-variable 'comment-start) "{--")
+;;                 (set (make-local-variable 'comment-end) "--}"))))
+;;                 'web-mode
+
+
