@@ -118,7 +118,7 @@ Setting the theme of treemacs to doom-colors. Change default width.
 * Ligatures
 #+begin_src emacs-lisp
 (require 'fira-code-mode)
-(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::")) ;; List of ligatures to turn off
+(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--")) ;; List of ligatures to turn off
 (add-hook 'prog-mode-hook (lambda ()
                             (unless (eq major-mode 'web-mode)
                             (fira-code-mode))))
@@ -264,4 +264,28 @@ Keep some space when scrolling.
 
 *** Killing emacs
 #+begin_src emacs-lisp
+#+end_src
+
+*** File Templates
+#+begin_src emacs-lisp
+(setq +file-templates-dir "~/.config/doom/templates"
+      max-specpdl-size 10000)
+(set-file-template! "\\.cpp$" :trigger "__cp.cpp" :mode 'c++-mode)
+#+end_src
+
+*** Indentation
+#+begin_src emacs-lisp
+#+end_src
+
+*** Cpp compile
+#+begin_src emacs-lisp
+(add-hook 'c++-mode-hook
+    (lambda ()
+    (unless (or (file-exists-p "makefile")
+                (file-exists-p "Makefile"))
+        (set (make-local-variable 'compile-command)
+            (concat "g++ -o run "
+                    (if buffer-file-name
+                        (shell-quote-argument
+                        (buffer-file-name))))))))
 #+end_src

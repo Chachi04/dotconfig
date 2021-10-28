@@ -39,7 +39,7 @@
         ))
 
 (require 'fira-code-mode)
-(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::")) ;; List of ligatures to turn off
+(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--")) ;; List of ligatures to turn off
 (add-hook 'prog-mode-hook (lambda ()
                             (unless (eq major-mode 'web-mode)
                             (fira-code-mode))))
@@ -127,3 +127,19 @@
 ;;                 'web-mode
 
 
+
+(setq +file-templates-dir "~/.config/doom/templates"
+      max-specpdl-size 10000)
+(set-file-template! "\\.cpp$" :trigger "__cp.cpp" :mode 'c++-mode)
+
+
+
+(add-hook 'c++-mode-hook
+    (lambda ()
+    (unless (or (file-exists-p "makefile")
+                (file-exists-p "Makefile"))
+        (set (make-local-variable 'compile-command)
+            (concat "g++ -o run "
+                    (if buffer-file-name
+                        (shell-quote-argument
+                        (buffer-file-name))))))))
