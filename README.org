@@ -1,94 +1,171 @@
 #+TITLE:  Dotfiles
 
 * TABLE OF CONTENTS :toc:
-- [[#zsh][Zsh]]
+- [[#zsh][ZSH]]
+  - [[#instant-prompt][INSTANT PROMPT]]
+  - [[#migrating-from-bash][Migrating from bash]]
+  - [[#path-to-oh-my-zsh][Path to oh-my-zsh]]
+  - [[#theme][Theme]]
+  - [[#settings][Settings]]
+  - [[#plugins][Plugins]]
+  - [[#source-oh-my-zsh][Source oh-my-zsh]]
+  - [[#user-configuration][User configuration]]
+  - [[#arcolinux-settings][ARCOLINUX SETTINGS]]
 - [[#tmux][Tmux]]
 
-* Zsh
+* ZSH
+** INSTANT PROMPT
+Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+Initialization code that may require console input (password prompts, [y/n]
+confirmations, etc.) must go above this block; everything else may go below.
 #+begin_src sh :tangle .zshrc
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+#+end_src
 
-# If you come from bash you might have to change your $PATH.
+** Migrating from bash
+If you come from bash you might have to change your $PATH.
+#+begin_src sh :tangle .zshrc
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
+#+end_src
 
-# Path to your oh-my-zsh installation.
-#installation via script from github
+** Path to oh-my-zsh
+Path to your oh-my-zsh installation.
+*** Github
+installation via script from github
+#+begin_src sh :tangle .zshrc
 #export ZSH="/home/$USER/.oh-my-zsh"
-#installation via paru -S oh-my-zsh-git
+#+end_src
+*** Yay/Paru
+installation via yay/paru -S oh-my-zsh-git
+#+begin_src sh :tangle .zshrc
 export ZSH=/usr/share/oh-my-zsh/
+#+end_src
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+** Theme
+Set name of the theme to load --- if set to "random", it will
+load a random theme each time oh-my-zsh is loaded, in which case,
+to know which specific one was loaded, run: echo $RANDOM_THEME
+See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+#+begin_src sh :tangle .zshrc
 ZSH_THEME="powerlevel10k/powerlevel10k"
+#+end_src
 
-# Set list of themes to pick from when loading at random
-# Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
-# If set to an empty array, this variable will have no effect.
+*** Prompt adjustments
+**** Left margin
+#+begin_src sh
+typeset -g POWERLEVEL9K_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL=" "
+#+end_src
+**** Directory max length
+#+begin_src sh
+typeset -g POWERLEVEL9K_DIR_MAX_LENGTH=1
+#+end_src
 
+*** Random theme list
+Set list of themes to pick from when loading at random
+Setting this variable when ZSH_THEME=random will cause zsh to load
+a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
+If set to an empty array, this variable will have no effect.
+#+begin_src sh :tangle .zshrc
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
-
 # ZSH_THEME_RANDOM_IGNORED=(pygmalion tjkirch_mod)
+#+end_src
 
-# Uncomment the following line to use case-sensitive completion.
+** Settings
+*** Case sensitivity
+Uncomment the following line to use case-sensitive completion.
+#+begin_src sh :tangle .zshrc
 # CASE_SENSITIVE="true"
+#+end_src
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
+*** Hyphen insensitivity
+Uncomment the following line to use hyphen-insensitive completion.
+Case-sensitive completion must be off. _ and - will be interchangeable.
+#+begin_src sh :tangle .zshrc
 # HYPHEN_INSENSITIVE="true"
+#+end_src
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
+*** Auto update
+Uncomment the following line to disable bi-weekly auto-update checks.
+#+begin_src sh :tangle .zshrc
 # DISABLE_AUTO_UPDATE="true"
+#+end_src
 
-# Uncomment the following line to automatically update without prompting.
+*** Update prompt
+Uncomment the following line to automatically update without prompting.
+#+begin_src sh :tangle .zshrc
 # DISABLE_UPDATE_PROMPT="true"
+#+end_src
 
-# Uncomment the following line to change how often to auto-update (in days).
+*** Auto-update frequency
+Uncomment the following line to change how often to auto-update (in days).
+#+begin_src sh :tangle .zshrc
 # export UPDATE_ZSH_DAYS=13
+#+end_src
 
-# Uncomment the following line if pasting URLs and other text is messed up.
+*** Magic function
+Uncomment the following line if pasting URLs and other text is messed up.
+#+begin_src sh :tangle .zshrc
 # DISABLE_MAGIC_FUNCTIONS=true
+#+end_src
 
+*** Ls colors
 # Uncomment the following line to disable colors in ls.
+#+begin_src sh :tangle .zshrc
 # DISABLE_LS_COLORS="true"
+#+end_src
 
-# Uncomment the following line to disable auto-setting terminal title.
+*** Auto title
+Uncomment the following line to disable auto-setting terminal title.
+#+begin_src sh :tangle .zshrc
 # DISABLE_AUTO_TITLE="true"
+#+end_src
 
-# Uncomment the following line to enable command auto-correction.
+*** Auto-correction
+Uncomment the following line to enable command auto-correction.
+#+begin_src sh :tangle .zshrc
 # ENABLE_CORRECTION="true"
+#+end_src
 
-# Uncomment the following line to display red dots whilst waiting for completion.
+*** Completion dots
+Uncomment the following line to display red dots whilst waiting for completion.
+#+begin_src sh :tangle .zshrc
 # COMPLETION_WAITING_DOTS="true"
+#+end_src
 
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
+*** VCS
+Uncomment the following line if you want to disable marking untracked files
+under VCS as dirty. This makes repository status check for large repositories
+much, much faster.
+#+begin_src sh :tangle .zshrc
 DISABLE_UNTRACKED_FILES_DIRTY="true"
+#+end_src
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
+*** Execution time stamp
+Uncomment the following line if you want to change the command execution time
+stamp shown in the history command output.
+You can set one of the optional three formats:
+"mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+or set a custom format using the strftime function format specifications,
+see 'man strftime' for details.
+#+begin_src sh :tangle .zshrc
 # HIST_STAMPS="mm/dd/yyyy"
+#+end_src
 
+*** Zsh custom folder
 # Would you like to use another custom folder than $ZSH/custom?
+#+begin_src sh :tangle .zshrc
 # ZSH_CUSTOM=/path/to/new-custom-folder
+#+end_src
 
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
-# Custom plugins may be added to $ZSH_CUSTOM/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
+** Plugins
+ Which plugins would you like to load?
+ Standard plugins can be found in $ZSH/plugins/
+ Custom plugins may be added to $ZSH_CUSTOM/plugins/
+ Example format: plugins=(rails git textmate ruby lighthouse)
+ Add wisely, as too many plugins slow down shell startup.
+#+begin_src sh :tangle .zshrc
 plugins=(
     # git
     zsh-z
@@ -97,38 +174,64 @@ plugins=(
     zsh-syntax-highlighting
     fzf
 )
+#+end_src
 
+** Source oh-my-zsh
+#+begin_src sh :tangle .zshrc
 source $ZSH/oh-my-zsh.sh
+#+end_src
 
-# User configuration
-
+** User configuration
+*** Manuals path
+#+begin_src sh :tangle .zshrc
 # export MANPATH="/usr/local/man:$MANPATH"
+#+end_src
 
-# You may need to manually set your language environment
+*** Language
+You may need to manually set your language environment
+#+begin_src sh :tangle .zshrc
 # export LANG=en_US.UTF-8
+#+end_src
 
-# Preferred editor for local and remote sessions
-export EDITOR='nvim'
+*** Text Editor
+Preferred editor for local and remote sessions
+#+begin_src sh :tangle .zshrc
+export EDITOR='emacs'
+#+end_src
 
-# Preferred browser
+*** Browser
+Preferred browser
+#+begin_src sh :tangle .zshrc
 export BROWSER='brave'
+#+end_src
 
-# Zsh-z configuration
+*** Zsh-z
+case sensitivity for zsh-z
+#+begin_src sh :tangle .zshrc
 export ZSHZ_CASE=smart
+#+end_src
 
-# Doom emacs config directory
+*** Doom emacs
+Doom emacs config directory
+#+begin_src sh :tangle .zshrc
 export PATH="$HOME/.emacs.d/bin:$PATH"
 export DOOMDIR="$HOME/.config/doom"
+#+end_src
 
-# Disable highlight when pasting
+*** Pasting
+Disable highlight when pasting
+#+begin_src sh :tangle .zshrc
 zle_highlight+=(paste:none)
+#+end_src
 
-# Compilation flags
+*** Complilation flags
+#+begin_src sh :tangle .zshrc
 # export ARCHFLAGS="-arch x86_64"
+#+end_src
 
+** ARCOLINUX SETTINGS
 
-####   ARCOLINUX SETTINGS   ####
-
+#+begin_src sh :tangle .zshrc
 setopt GLOB_DOTS
 
 # If not running interactively, don't do anything
