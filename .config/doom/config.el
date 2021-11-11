@@ -15,14 +15,6 @@
 (setq doom-themes-treemacs-theme 'doom-colors)
 (setq treemacs-width 25)
 
-;; (use-package! tree-sitter
-;;   :config
-;;   (require 'tree-sitter-langs)
-;;   (global-tree-sitter-mode)
-;;   (pushnew! tree-sitter-major-mode-language-alist'
-;;             '(scss-mode . css))
-;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
 (map! :leader
       :desc "Org Babel tangle" "m B" #'org-babel-tangle)
 (after! org-superstar
@@ -95,7 +87,7 @@
   (consult-buffer))
 
 (after! company
-  (setq company-idle-delay 0.5
+  (setq company-idle-delay 0.8
         company-minimum-prefix-length 2)
   (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
 (setq-default history-length 1000)
@@ -110,23 +102,22 @@
   :commands aas-mode)
 
 (setq yas-triggers-in-field t)
+(setq yas--default-user-snippets-dir "~/.config/doom/snippets")
 
-;; (with-eval-after-load 'evil-nerd-commenter
-;;   (defun my-comment-or-uncomment-region (beg end)
-;;     (let* ((comment-start "{--")
-;;            (comment-end "bbb"))
-;;       (evilnc-comment-or-uncomment-region-internal beg end)))
-;;   (setq evilnc-comment-or-uncomment-region-function
-;;         'my-comment-or-uncomment-region))
-;; (add-to-list 'auto-mode-alist
-;;              '("\\.blade.php\\'" . (lambda ()
-;;                 ;; add major mode setting here, if needed, for example:
-;;                 ;; (text-mode)
-;;                 (set (make-local-variable 'comment-start) "{--")
-;;                 (set (make-local-variable 'comment-end) "--}"))))
-;;                 'web-mode
+(setq web-mode-engines-alist
+      '(("php"    . "\\\\.phtml\\\\'")
+        ("blade"  . "\\\\.blade\\\\.")))
+(add-to-list 'auto-mode-alist '("\\.php\\'" . php-mode))
+(add-to-list 'auto-mode-alist '("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode))
+(setq web-mode-comment-style 2)
 
+;; (evil-ex-define-cmd "q" (switch-to-buffer "*doom*"))
 
+;; (after! persp-mode
+;;   (setq persp-emacsclient-init-frame-behaviour-override "main"))
+
+(map! :leader
+      :desc "Toggle Center the window" "w c" #'centered-window-mode)
 
 (setq +file-templates-dir "~/.config/doom/templates"
       max-specpdl-size 10000)

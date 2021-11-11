@@ -62,3 +62,4 @@
 ;; (package! tree-sitter-langs)
 (package! fira-code-mode)
 (package! yasnippet-snippets)
+;; (package! olivetti)

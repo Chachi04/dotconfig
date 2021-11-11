@@ -12,7 +12,6 @@
   - [[#transparency][Transparency]]
   - [[#relative-linenumbers][Relative linenumbers]]
   - [[#treemacs][TREEMACS]]
-  - [[#treesitter][TREESITTER]]
 - [[#org-mode][ORG MODE]]
 - [[#ligatures][Ligatures]]
 - [[#vim-escape][Vim Escape]]
@@ -59,7 +58,6 @@ They all accept either a font-spec, font string ("Input Mono-12"), or xlfd font 
       doom-big-font (font-spec :family "FiraCode Nerd Font Mono" :size 24))
 #+end_src
 
-
 * APPEARANCE
 ** Theme
 Setting the theme to doom-palenight. To try out new themes use 'SPC h t'.
@@ -84,17 +82,6 @@ Setting the theme of treemacs to doom-colors. Change default width.
 #+begin_src emacs-lisp
 (setq doom-themes-treemacs-theme 'doom-colors)
 (setq treemacs-width 25)
-#+end_src
-
-** TREESITTER
-#+begin_src emacs-lisp
-;; (use-package! tree-sitter
-;;   :config
-;;   (require 'tree-sitter-langs)
-;;   (global-tree-sitter-mode)
-;;   (pushnew! tree-sitter-major-mode-language-alist'
-;;             '(scss-mode . css))
-;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 #+end_src
 
 * ORG MODE
@@ -173,7 +160,6 @@ Adding Bulgarian Phonetic input method
       :desc "Toggle input method" "t i" #'toggle-input-method)
 #+end_src
 
-
 * Pointer increment/decrement
 #+begin_src emacs-lisp
 (map! :leader
@@ -218,7 +204,7 @@ Keep some space when scrolling.
 *** Company
 #+begin_src emacs-lisp
 (after! company
-  (setq company-idle-delay 0.5
+  (setq company-idle-delay 0.8
         company-minimum-prefix-length 2)
   (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
 (setq-default history-length 1000)
@@ -242,28 +228,35 @@ Keep some space when scrolling.
 *** Yas
 #+begin_src emacs-lisp
 (setq yas-triggers-in-field t)
+(setq yas--default-user-snippets-dir "~/.config/doom/snippets")
 #+end_src
 
 *** Laravel blades
 #+begin_src emacs-lisp
-;; (with-eval-after-load 'evil-nerd-commenter
-;;   (defun my-comment-or-uncomment-region (beg end)
-;;     (let* ((comment-start "{--")
-;;            (comment-end "bbb"))
-;;       (evilnc-comment-or-uncomment-region-internal beg end)))
-;;   (setq evilnc-comment-or-uncomment-region-function
-;;         'my-comment-or-uncomment-region))
-;; (add-to-list 'auto-mode-alist
-;;              '("\\.blade.php\\'" . (lambda ()
-;;                 ;; add major mode setting here, if needed, for example:
-;;                 ;; (text-mode)
-;;                 (set (make-local-variable 'comment-start) "{--")
-;;                 (set (make-local-variable 'comment-end) "--}"))))
-;;                 'web-mode
+(setq web-mode-engines-alist
+      '(("php"    . "\\\\.phtml\\\\'")
+        ("blade"  . "\\\\.blade\\\\.")))
+(add-to-list 'auto-mode-alist '("\\.php\\'" . php-mode))
+(add-to-list 'auto-mode-alist '("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode))
+(setq web-mode-comment-style 2)
 #+end_src
 
 *** Killing emacs
 #+begin_src emacs-lisp
+;; (evil-ex-define-cmd "q" (switch-to-buffer "*doom*"))
+#+end_src
+
+*** Workspaces
+workspace configuration - do not create new workspace for each session
+#+begin_src emacs-lisp
+;; (after! persp-mode
+;;   (setq persp-emacsclient-init-frame-behaviour-override "main"))
+#+end_src
+
+*** Centered window
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "Toggle Center the window" "w c" #'centered-window-mode)
 #+end_src
 
 *** File Templates
