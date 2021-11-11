@@ -54,7 +54,7 @@ source $ZSH/oh-my-zsh.sh
 
 # export LANG=en_US.UTF-8
 
-export EDITOR='emacs'
+export EDITOR='nvim'
 
 export BROWSER='brave'
 
@@ -106,6 +106,10 @@ alias rmdir='echo Use "deldir" or the full path i.e. "/bin/rmdir"'
 #nvim
 alias vim='nvim'
 alias vi='nvim'
+
+#emacs
+alias emacs="emacsclient --quiet --create-frame --no-wait --alternate-editor=''"
+alias killemacs="emacsclient --eval '(save-buffers-kill-emacs)'"
 
 #rogauracore | keyboard backlight
 alias color="sudo rogauracore"
@@ -375,7 +379,9 @@ alias personal='cp -Rf /personal/* ~'
 
 # reporting tools - install when not installed
 # install neofetch
-neofetch
+# neofetch > .cache/neofetch
+# /bin/cat .cache/neofetch
+# neofetch
 # install screenfetch
 #screenfetch
 # install ufetch-git
@@ -383,7 +389,7 @@ neofetch
 # install ufetch-arco-git
 #ufetch-arco
 # install arcolinux-paleofetch-git
-#paleofetch
+paleofetch
 # install alsi
 #alsi
 # install arcolinux-bin-git - standard on ArcoLinux isos (or sfetch - smaller)

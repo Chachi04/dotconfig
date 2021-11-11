@@ -196,7 +196,7 @@ You may need to manually set your language environment
 *** Text Editor
 Preferred editor for local and remote sessions
 #+begin_src sh :tangle .zshrc
-export EDITOR='emacs'
+export EDITOR='nvim'
 #+end_src
 
 *** Browser
@@ -230,7 +230,6 @@ zle_highlight+=(paste:none)
 #+end_src
 
 ** ARCOLINUX SETTINGS
-
 #+begin_src sh :tangle .zshrc
 setopt GLOB_DOTS
 
@@ -271,6 +270,10 @@ alias rmdir='echo Use "deldir" or the full path i.e. "/bin/rmdir"'
 #nvim
 alias vim='nvim'
 alias vi='nvim'
+
+#emacs
+alias emacs="emacsclient --quiet --create-frame --no-wait --alternate-editor=''"
+alias killemacs="emacsclient --eval '(save-buffers-kill-emacs)'"
 
 #rogauracore | keyboard backlight
 alias color="sudo rogauracore"
@@ -540,7 +543,9 @@ alias personal='cp -Rf /personal/* ~'
 
 # reporting tools - install when not installed
 # install neofetch
-neofetch
+# neofetch > .cache/neofetch
+# /bin/cat .cache/neofetch
+# neofetch
 # install screenfetch
 #screenfetch
 # install ufetch-git
@@ -548,7 +553,7 @@ neofetch
 # install ufetch-arco-git
 #ufetch-arco
 # install arcolinux-paleofetch-git
-#paleofetch
+paleofetch
 # install alsi
 #alsi
 # install arcolinux-bin-git - standard on ArcoLinux isos (or sfetch - smaller)
