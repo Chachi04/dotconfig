@@ -12,6 +12,8 @@
 inoremap <expr> <C-j> pumvisible() ? "\<C-n>" : "\<C-j>"
 inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 
+inoremap <expr> <C-CR> pumvisible() ? compe#complete : "\<CR>"
+
 
 imap <expr> <Tab> vsnip#jumpable(1) ? '<Plug>(vsnip-jump-next)' : vsnip#available(1) ? '<Plug>(vsnip-expand-or-jump)' : pumvisible() ? '<C-n>' : '<Tab>'
 smap <expr> <Tab> vsnip#jumpable(1) ? '<Plug>(vsnip-jump-next)' : vsnip#available(1) ? '<Plug>(vsnip-expand-or-jump)' : pumvisible() ? '<C-n>' : '<Tab>'
