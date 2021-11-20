@@ -111,7 +111,9 @@
 (add-to-list 'auto-mode-alist '("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode))
 (setq web-mode-comment-style 2)
 
-;; (evil-ex-define-cmd "q" (switch-to-buffer "*doom*"))
+(evil-ex-define-cmd "q" (lambda () (interactive) (switch-to-buffer "*doom*")))
+(map! :leader
+      :desc "go to dashboard" "h h" (lambda () (interactive) (switch-to-buffer "*doom*")))
 
 ;; (after! persp-mode
 ;;   (setq persp-emacsclient-init-frame-behaviour-override "main"))
@@ -123,7 +125,10 @@
       max-specpdl-size 10000)
 (set-file-template! "\\.cpp$" :trigger "__cp.cpp" :mode 'c++-mode)
 
-
+(defun my-c++-mode-hook ()
+  (setq c-basic-offset 2)
+  (c-set-offset 'substatement-open 0))
+(add-hook 'c++-mode-hook 'my-c++-mode-hook)
 
 (add-hook 'c++-mode-hook
     (lambda ()
@@ -134,3 +139,14 @@
                     (if buffer-file-name
                         (shell-quote-argument
                         (buffer-file-name))))))))
+
+;; (electric-pair-mode 1)
+
+;; (defvar org-electric-pairs '((?\* . ?\*) (?/ . ?/) (?= . ?=)
+;;                             (?\_ . ?\_) (?~ . ?~) (?+ . ?+)) "Electric pairs for org-mode.")
+
+;; (defun org-add-electric-pairs ()
+;;   (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
+;;   (setq-local electric-pair-text-pairs electric-pair-pairs))
+
+;; (add-hook 'org-mode-hook 'org-add-electric-pairs)

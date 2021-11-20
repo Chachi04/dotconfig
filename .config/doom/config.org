@@ -242,8 +242,11 @@ Keep some space when scrolling.
 #+end_src
 
 *** Killing emacs
+Don't kill emacs with :q, instead go to doom dashboard.
 #+begin_src emacs-lisp
-;; (evil-ex-define-cmd "q" (switch-to-buffer "*doom*"))
+(evil-ex-define-cmd "q" (lambda () (interactive) (switch-to-buffer "*doom*")))
+(map! :leader
+      :desc "go to dashboard" "g d" (lambda () (interactive) (switch-to-buffer "*doom*")))
 #+end_src
 
 *** Workspaces
@@ -268,6 +271,10 @@ workspace configuration - do not create new workspace for each session
 
 *** Indentation
 #+begin_src emacs-lisp
+(defun my-c++-mode-hook ()
+  (setq c-basic-offset 2)
+  (c-set-offset 'substatement-open 0))
+(add-hook 'c++-mode-hook 'my-c++-mode-hook)
 #+end_src
 
 *** Cpp compile
@@ -281,4 +288,18 @@ workspace configuration - do not create new workspace for each session
                     (if buffer-file-name
                         (shell-quote-argument
                         (buffer-file-name))))))))
+#+end_src
+
+*** Autopairs
+#+begin_src emacs-lisp
+;; (electric-pair-mode 1)
+
+;; (defvar org-electric-pairs '((?\* . ?\*) (?/ . ?/) (?= . ?=)
+;;                             (?\_ . ?\_) (?~ . ?~) (?+ . ?+)) "Electric pairs for org-mode.")
+
+;; (defun org-add-electric-pairs ()
+;;   (setq-local electric-pair-pairs (append electric-pair-pairs org-electric-pairs))
+;;   (setq-local electric-pair-text-pairs electric-pair-pairs))
+
+;; (add-hook 'org-mode-hook 'org-add-electric-pairs)
 #+end_src
