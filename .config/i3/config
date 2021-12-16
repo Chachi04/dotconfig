@@ -64,7 +64,8 @@ bindsym $super+space exec xkb-switch -n
 # setting variables for later use
 # use xrandr and/or arandr to know the names of your monitors
 # use this line to tell which monitor is on the right
-exec --no-startup-id xrandr --output HDMI-1 --right-of eDP-1 --auto
+# exec --no-startup-id xrandr --output HDMI-1 --right-of eDP-1 --auto
+exec --no-startup-id xrandr --output HDMI-1 --left-of eDP-1 --auto
 #exec --no-startup-id xrandr --output HDMI-2 --right-of HDMI-1 --auto
 
 
@@ -73,17 +74,29 @@ exec --no-startup-id xrandr --output HDMI-1 --right-of eDP-1 --auto
 set $firstMonitor eDP-1
 set $secondMonitor HDMI-1
 
-workspace 1 output $firstMonitor
-workspace 2 output $firstMonitor
-workspace 3 output $firstMonitor
-workspace 4 output $firstMonitor
-workspace 5 output $firstMonitor
+workspace 1 output $secondMonitor
+workspace 2 output $secondMonitor
+workspace 3 output $secondMonitor
+workspace 4 output $secondMonitor
+workspace 5 output  $secondMonitor
 
-workspace 6 output $secondMonitor
-workspace 7 output $secondMonitor
-workspace 8 output $secondMonitor
-workspace 9 output $secondMonitor
-workspace 10 output $secondMonitor
+workspace 6 output $firstMonitor
+workspace 7 output $firstMonitor
+workspace 8 output $firstMonitor
+workspace 9 output $firstMonitor
+workspace 10 output $firstMonitor
+
+# workspace 1 output $firstMonitor
+# workspace 2 output $firstMonitor
+# workspace 3 output $firstMonitor
+# workspace 4 output $firstMonitor
+# workspace 5 output $firstMonitor
+
+# workspace 6 output $secondMonitor
+# workspace 7 output $secondMonitor
+# workspace 8 output $secondMonitor
+# workspace 9 output $secondMonitor
+# workspace 10 output $secondMonitor
 
 # switch to workspace
 bindsym $super+1 workspace 1
@@ -358,7 +371,6 @@ assign [class="Code|code|Emacs|emacs|sublime-text|sublime_text"]                
 
 # Workspace 3 Inkscape
 assign [class="Thunar|thunar"]                                                           → 3
-
 # Workspace 4 Gimp
 #assign [class="Gimp"]                                                               → 4
 
@@ -372,13 +384,13 @@ assign [class="Nitrogen|nitrogen"]                                              
 #assign [class="Vlc|vlc"]                                                            → 6
 
 # Workspace 7 virtual machines and settings
-assign [class="Microsoft Teams - Preview|microsoft teams - preview|discord"]						    → 7
+assign [class="Microsoft Teams - Preview|microsoft teams - preview|discord"]	    → 7
 
 # Workspace 8 file managers
 #assign [class="Nemo|Thunar|Caja|nautilus|Nautilus"]                                 → 8
 
 # Workspace 9 email clients
-assign [class="Mailspring|mailspring|Skype|skype|skypeforlinux|Skypeforlinux"]                                                    → 9
+assign [class="Skype|skype|skypeforlinux|Skypeforlinux"]                                                    → 9
 
 # Workspace 10 music related
 assign [class="Spotify|spotify"]                                                    → 10
@@ -553,6 +565,9 @@ bindsym control+$alt+p exec --no-startup-id pamac-manager
 #xkill
 bindsym --release $super+Escape exec xkill
 
+#discord
+bindsym $super+t exec --no-startup-id brave teams.microsoft.com
+
 #workspace related
 
 #workspace 1 related
@@ -566,7 +581,7 @@ bindsym $super+Shift+w exec --no-startup-id brave --incognito;focus
 #workspace 2 related
 #Emacs
 bindsym $super+e exec --no-startup-id emacsclient --quiet --create-frame --no-wait --alternate-editor=""
-bindsyn $super+c exec --no-startup-id code
+bindsym $super+c exec --no-startup-id code
 
 #workspace 3 related
 for_window [class="Thunar"] focus
@@ -643,6 +658,7 @@ for_window [class="Font-manager"] floating enable
 for_window [class="Nitrogen"] floating disable
 for_window [class="Pavucontrol"] floating disable
 for_window [class="Peek"] floating enable
+for_window [class="Python"] floating enable
 for_window [class="^Skype$"] floating disable
 for_window [class="^Spotify$"] floating disable
 for_window [class="System-config-printer.py"] floating enable
@@ -781,9 +797,9 @@ hide_edge_borders both
 
 #changing border style
 #super+t in arcolinux is starting terminal
-bindsym $super+t border normal
-bindsym $super+y border 1pixel
-bindsym $super+u border none
+# bindsym $super+t border normal
+# bindsym $super+y border 1pixel
+# bindsym $super+u border none
 
 
 #new_window pixel 1
