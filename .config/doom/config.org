@@ -21,6 +21,7 @@
 - [[#lsp-ignores][LSP IGNORES]]
 - [[#input-methods][INPUT METHODS]]
 - [[#pointer-incrementdecrement][Pointer increment/decrement]]
+- [[#treesitter][Treesitter]]
 - [[#doom-configuration][Doom configuration]]
   - [[#better-defautls][Better defautls]]
 
@@ -68,8 +69,8 @@ Setting the theme to doom-palenight. To try out new themes use 'SPC h t'.
 ** Transparency
 Enable transparent background.
 #+begin_src emacs-lisp
-(set-frame-parameter (selected-frame)'alpha '(90 . 90))
-(add-to-list 'default-frame-alist'(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame)'alpha '(97 . 97))
+(add-to-list 'default-frame-alist'(alpha . (97 . 97)))
 #+end_src
 
 ** Relative linenumbers
@@ -100,15 +101,56 @@ Setting the theme of treemacs to doom-colors. Change default width.
         org-log-done 'time
         ;; org-hide-emphasis-markers t
         ))
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
+(add-hook 'org-mode-hook 'centered-window-mode)
 #+end_src
 
 * Ligatures
 #+begin_src emacs-lisp
 (require 'fira-code-mode)
-(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--")) ;; List of ligatures to turn off
+(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--" "and" "or")) ;; List of ligatures to turn off
 (add-hook 'prog-mode-hook (lambda ()
                             (unless (eq major-mode 'web-mode)
                             (fira-code-mode))))
+;; (plist-put! +ligatures-extra-symbols
+;;   org
+;;   :name          "»"
+;;   :src_block     "»"
+;;   :src_block_end "«"
+;;   :quote         "“"
+;;   :quote_end     "”"
+;;   ;; Functional
+;;   :lambda        "λ"
+;;   :def           "ƒ"
+;;   :composition   "∘"
+;;   :map           "↦"
+;;   ;; Types
+;;   :null          "∅"
+;;   :true          "𝕋"
+;;   :false         "𝔽"
+;;   :int           "ℤ"
+;;   :float         "ℝ"
+;;   :str           "𝕊"
+;;   :bool          "𝔹"
+;;   :list          "𝕃"
+;;   ;; Flow
+;;   :not           "￢"
+;;   :in            "∈"
+;;   :not-in        "∉"
+;;   :and           "and"
+;;   :or            "or"
+;;   :for           "∀"
+;;   :some          "∃"
+;;   :return        "⟼"
+;;   :yield         "⟻"
+;;   ;; Other
+;;   :union         "⋃"
+;;   :intersect     "∩"
+;;   :diff          "∖"
+;;   :tuple         "⨂"
+;;   :pipe          "" ;; FIXME: find a non-private char
+;;   :dot           "•"  ;; you could also add your own if you want
+;; )
 #+end_src
 
 * Vim Escape
@@ -173,6 +215,15 @@ Adding Bulgarian Phonetic input method
       "-" #'evil-numbers/dec-at-pt)
 #+end_src
 
+* Treesitter
+#+begin_src emacs-lisp
+;; (use-package! tree-sitter
+;;   :config
+;;   (require 'tree-sitter-langs)
+;;   (global-tree-sitter-mode)
+;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+#+end_src
+
 * Doom configuration
 ** Better defautls
 This parts follow the configuration found on [https://tecosaur.github.io/emacs-config/config.html]
@@ -184,7 +235,7 @@ Keep some space when scrolling.
 (setq delete-by-moving-to-trash t
       undo-limit 80000000
       evil-want-fine-undo t
-      truncate-string-ellipsis "…"
+      ;; truncate-string-ellipsis "…"
       scroll-margin 10
       )
 #+end_src
@@ -233,17 +284,21 @@ Keep some space when scrolling.
 
 *** Laravel blades
 #+begin_src emacs-lisp
-(setq web-mode-engines-alist
-      '(("php"    . "\\\\.phtml\\\\'")
-        ("blade"  . "\\\\.blade\\\\.")))
-(add-to-list 'auto-mode-alist '("\\.php\\'" . php-mode))
-(add-to-list 'auto-mode-alist '("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode))
+;; (setq web-mode-engines-alist
+;;       '(("php"    . "\\\\.phtml\\\\'")
+;;         ("blade"  . "\\\\.blade\\\\.")))
+;; (add-to-list 'auto-mode-alist '("\\.php\\'" . php-mode))
+;; (add-to-list 'auto-mode-alist '("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode))
 (setq web-mode-comment-style 2)
 #+end_src
 
 *** Killing emacs
 Don't kill emacs with :q, instead go to doom dashboard.
 #+begin_src emacs-lisp
+;; (defun emacs-smart-quit
+;;     (interactive)
+;;   (if ())
+;;   )
 (evil-ex-define-cmd "q" (lambda () (interactive) (switch-to-buffer "*doom*")))
 (map! :leader
       :desc "go to dashboard" "g d" (lambda () (interactive) (switch-to-buffer "*doom*")))

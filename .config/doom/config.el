@@ -7,8 +7,8 @@
 
 (setq doom-theme 'doom-palenight)
 
-(set-frame-parameter (selected-frame)'alpha '(90 . 90))
-(add-to-list 'default-frame-alist'(alpha . (90 . 90)))
+(set-frame-parameter (selected-frame)'alpha '(97 . 97))
+(add-to-list 'default-frame-alist'(alpha . (97 . 97)))
 
 (setq display-line-numbers-type 'relative)
 
@@ -29,12 +29,53 @@
         org-log-done 'time
         ;; org-hide-emphasis-markers t
         ))
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
+(add-hook 'org-mode-hook 'centered-window-mode)
 
 (require 'fira-code-mode)
-(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--")) ;; List of ligatures to turn off
+(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--" "and" "or")) ;; List of ligatures to turn off
 (add-hook 'prog-mode-hook (lambda ()
                             (unless (eq major-mode 'web-mode)
                             (fira-code-mode))))
+;; (plist-put! +ligatures-extra-symbols
+;;   org
+;;   :name          "»"
+;;   :src_block     "»"
+;;   :src_block_end "«"
+;;   :quote         "“"
+;;   :quote_end     "”"
+;;   ;; Functional
+;;   :lambda        "λ"
+;;   :def           "ƒ"
+;;   :composition   "∘"
+;;   :map           "↦"
+;;   ;; Types
+;;   :null          "∅"
+;;   :true          "𝕋"
+;;   :false         "𝔽"
+;;   :int           "ℤ"
+;;   :float         "ℝ"
+;;   :str           "𝕊"
+;;   :bool          "𝔹"
+;;   :list          "𝕃"
+;;   ;; Flow
+;;   :not           "￢"
+;;   :in            "∈"
+;;   :not-in        "∉"
+;;   :and           "and"
+;;   :or            "or"
+;;   :for           "∀"
+;;   :some          "∃"
+;;   :return        "⟼"
+;;   :yield         "⟻"
+;;   ;; Other
+;;   :union         "⋃"
+;;   :intersect     "∩"
+;;   :diff          "∖"
+;;   :tuple         "⨂"
+;;   :pipe          "" ;; FIXME: find a non-private char
+;;   :dot           "•"  ;; you could also add your own if you want
+;; )
 
 ;; TODO replace C-c prefix with something else so that no functionality is lost
 (map! :map evil-insert-state-map "C-c" 'evil-normal-state)
@@ -70,10 +111,16 @@
       :map evil-normal-state-map
       "-" #'evil-numbers/dec-at-pt)
 
+;; (use-package! tree-sitter
+;;   :config
+;;   (require 'tree-sitter-langs)
+;;   (global-tree-sitter-mode)
+;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
 (setq delete-by-moving-to-trash t
       undo-limit 80000000
       evil-want-fine-undo t
-      truncate-string-ellipsis "…"
+      ;; truncate-string-ellipsis "…"
       scroll-margin 10
       )
 
@@ -104,16 +151,20 @@
 (setq yas-triggers-in-field t)
 (setq yas--default-user-snippets-dir "~/.config/doom/snippets")
 
-(setq web-mode-engines-alist
-      '(("php"    . "\\\\.phtml\\\\'")
-        ("blade"  . "\\\\.blade\\\\.")))
-(add-to-list 'auto-mode-alist '("\\.php\\'" . php-mode))
-(add-to-list 'auto-mode-alist '("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode))
+;; (setq web-mode-engines-alist
+;;       '(("php"    . "\\\\.phtml\\\\'")
+;;         ("blade"  . "\\\\.blade\\\\.")))
+;; (add-to-list 'auto-mode-alist '("\\.php\\'" . php-mode))
+;; (add-to-list 'auto-mode-alist '("/\\(views\\|html\\|templates\\)/.*\\.php\\'" . web-mode))
 (setq web-mode-comment-style 2)
 
+;; (defun emacs-smart-quit
+;;     (interactive)
+;;   (if ())
+;;   )
 (evil-ex-define-cmd "q" (lambda () (interactive) (switch-to-buffer "*doom*")))
 (map! :leader
-      :desc "go to dashboard" "h h" (lambda () (interactive) (switch-to-buffer "*doom*")))
+      :desc "go to dashboard" "g d" (lambda () (interactive) (switch-to-buffer "*doom*")))
 
 ;; (after! persp-mode
 ;;   (setq persp-emacsclient-init-frame-behaviour-override "main"))

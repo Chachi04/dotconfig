@@ -34,7 +34,7 @@
 (package! evil-indent-plus :disable t)
 (package! evil-vimish-fold :disable t)
 (package! evil-visualstar :disable t)
-(package! doom-snippets :ignore t)
+;; (package! doom-snippets :ignore t)
 
 ;; You can override the recipe of a built in package without having to specify
 ;; all the properties for `:recipe'. These will inherit the rest of its recipe
