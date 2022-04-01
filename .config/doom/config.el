@@ -30,7 +30,7 @@
         ;; org-hide-emphasis-markers t
         ))
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
-(add-hook 'org-mode-hook 'centered-window-mode)
+;; (add-hook 'org-mode-hook 'centered-window-mode)
 
 (require 'fira-code-mode)
 (customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--" "and" "or")) ;; List of ligatures to turn off

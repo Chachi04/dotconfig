@@ -102,7 +102,7 @@ Setting the theme of treemacs to doom-colors. Change default width.
         ;; org-hide-emphasis-markers t
         ))
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
-(add-hook 'org-mode-hook 'centered-window-mode)
+;; (add-hook 'org-mode-hook 'centered-window-mode)
 #+end_src
 
 * Ligatures
@@ -358,3 +358,5 @@ workspace configuration - do not create new workspace for each session
 
 ;; (add-hook 'org-mode-hook 'org-add-electric-pairs)
 #+end_src
+
+#+RESULTS:
