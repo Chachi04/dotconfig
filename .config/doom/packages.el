@@ -34,6 +34,7 @@
 (package! evil-indent-plus :disable t)
 (package! evil-vimish-fold :disable t)
 (package! evil-visualstar :disable t)
+(package! evil-snipe :disable t)
 ;; (package! doom-snippets :ignore t)
 
 ;; You can override the recipe of a built in package without having to specify
@@ -59,7 +60,6 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-;; (package! tree-sitter)
-;; (package! tree-sitter-langs)
-(package! fira-code-mode)
+(package! tree-sitter)
+(package! tree-sitter-langs)
 (package! yasnippet-snippets)

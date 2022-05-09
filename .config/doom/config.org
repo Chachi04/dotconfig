@@ -107,11 +107,10 @@ Setting the theme of treemacs to doom-colors. Change default width.
 
 * Ligatures
 #+begin_src emacs-lisp
-(require 'fira-code-mode)
-(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--" "and" "or")) ;; List of ligatures to turn off
-(add-hook 'prog-mode-hook (lambda ()
-                            (unless (eq major-mode 'web-mode)
-                            (fira-code-mode))))
+;; (customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--" "and" "or")) ;; List of ligatures to turn off
+;; (add-hook 'prog-mode-hook (lambda ()
+;;                             (unless (eq major-mode 'web-mode)
+;;                             (fira-code-mode))))
 ;; (plist-put! +ligatures-extra-symbols
 ;;   org
 ;;   :name          "»"
@@ -153,6 +152,7 @@ Setting the theme of treemacs to doom-colors. Change default width.
 ;; )
 #+end_src
 
+
 * Vim Escape
 Use C-c like in vim.
 #+begin_src emacs-lisp
@@ -161,7 +161,6 @@ Use C-c like in vim.
 (map! :map evil-normal-state-map "C-c" 'evil-normal-state)
 #+end_src
 
-#+RESULTS:
 
 * LINES
 Set line numbers to ralative for easy jumps. Set C-/ to toggle comment. Moving line(s) up/down with M-j/M-k
@@ -174,11 +173,13 @@ Set line numbers to ralative for easy jumps. Set C-/ to toggle comment. Moving l
       "M-j" #'drag-stuff-down)
 #+end_src
 
+
 * SUBSTITUTION
 Rest s/S's behaviour to substitution
 #+begin_src emacs-lisp
 (remove-hook 'doom-first-input-hook #'evil-snipe-mode)
 #+end_src
+
 
 * CURSOR
 Tired of the cursor going back when exiting insert mode? Worry no more!
@@ -217,11 +218,11 @@ Adding Bulgarian Phonetic input method
 
 * Treesitter
 #+begin_src emacs-lisp
-;; (use-package! tree-sitter
-;;   :config
-;;   (require 'tree-sitter-langs)
-;;   (global-tree-sitter-mode)
-;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+(use-package! tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 #+end_src
 
 * Doom configuration

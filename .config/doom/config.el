@@ -32,11 +32,10 @@
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 ;; (add-hook 'org-mode-hook 'centered-window-mode)
 
-(require 'fira-code-mode)
-(customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--" "and" "or")) ;; List of ligatures to turn off
-(add-hook 'prog-mode-hook (lambda ()
-                            (unless (eq major-mode 'web-mode)
-                            (fira-code-mode))))
+;; (customize-set-variable 'fira-code-mode-disabled-ligatures '("[]" "#{" "#(" "#_" "#_(" "x" "::" "<>" "++" "--" "and" "or")) ;; List of ligatures to turn off
+;; (add-hook 'prog-mode-hook (lambda ()
+;;                             (unless (eq major-mode 'web-mode)
+;;                             (fira-code-mode))))
 ;; (plist-put! +ligatures-extra-symbols
 ;;   org
 ;;   :name          "»"
@@ -111,11 +110,11 @@
       :map evil-normal-state-map
       "-" #'evil-numbers/dec-at-pt)
 
-;; (use-package! tree-sitter
-;;   :config
-;;   (require 'tree-sitter-langs)
-;;   (global-tree-sitter-mode)
-;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+(use-package! tree-sitter
+  :config
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 (setq delete-by-moving-to-trash t
       undo-limit 80000000
