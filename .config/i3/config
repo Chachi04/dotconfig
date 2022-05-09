@@ -464,7 +464,7 @@ exec_always --no-startup-id numlockx on
 #feh sets wallpaper
 # exec --no-startup-id feh --bg-fill /usr/share/backgrounds/arcolinux/night-glow-5839x3893.jpg &
 # exec --no-startup-id nitrogen --restore &
-exec --no-startup-id feh --randomize --bg-fill --no-xinerama /usr/share/backgrounds/custom/3840x1080/*
+exec --no-startup-id feh --randomize --bg-fill --no-xinerama /usr/share/backgrounds/custom/wallpapers/*
 bindsym $super+n exec --no-startup-id feh --randomize --bg-fill --no-xinerama /usr/share/backgrounds/custom/wallpapers/*
 
 #Polybar
