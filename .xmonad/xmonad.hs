@@ -1,57 +1,118 @@
 -- Base
 import XMonad
-import System.Directory
 import System.IO
 import System.Exit
-
+import qualified XMonad.StackSet as W
 
 -- Actions
-import XMonad.Actions.Navigation2D
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.CycleWS
+import XMonad.Actions.SpawnOn
+import XMonad.Actions.Navigation2D
+
+-- Data
+import qualified Data.Map as M
 
 -- Hooks
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.ManageHelpers(doFullFloat, doCenterFloat, isFullscreen, isDialog)
-import XMonad.Config.Desktop
-import XMonad.Config.Azerty
-import XMonad.Util.Run(spawnPipe)
-import XMonad.Actions.SpawnOn
-import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
+import XMonad.Hooks.ManageHelpers(isFullscreen, doFullFloat, doCenterFloat, isDialog)
 import XMonad.Hooks.UrgencyHook
 import qualified Codec.Binary.UTF8.String as UTF8
 
 -- Layouts
-import XMonad.Layout.Spacing
 import XMonad.Layout.Gaps
 import XMonad.Layout.ResizableTile
-import XMonad.Layout.NoBorders
--- import XMonad.Layout.VoidBorders
 import XMonad.Layout.Fullscreen (fullscreenFull)
 import XMonad.Layout.Cross(simpleCross)
 import XMonad.Layout.Spiral(spiral)
 import XMonad.Layout.ThreeColumns
-import XMonad.Layout.MultiToggle
-import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.IndependentScreens
-import XMonad.Layout.WindowNavigation
 import XMonad.Layout.CenteredMaster(centerMaster)
 
+-- Layouts modifiers
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.NoBorders
+import XMonad.Layout.Spacing
+import XMonad.Layout.WindowNavigation
+
+-- Util
+import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings, additionalKeysP)
+import XMonad.Util.NamedScratchpad
+
+-- Configs
+import XMonad.Config.Desktop
+import XMonad.Config.Azerty
+
 import Graphics.X11.ExtraTypes.XF86
-import qualified XMonad.StackSet as W
-import qualified Data.Map as M
-import qualified Data.ByteString as B
 import Control.Monad (liftM2)
 import qualified DBus as D
 import qualified DBus.Client as D
 
+-- Extra
+-- import System.Directory
+-- import XMonad.Actions.WindowGo (runOrRaise)
+-- import XMonad.Actions.WithAll (sinkAll, killAll)
+-- import XMonad.Actions.RotSlaves (rotSlavesDown, rotAllDown)
+-- import XMonad.Actions.Promote
+-- import XMonad.Actions.MouseResize
+-- import XMonad.Actions.GridSelect
+-- import XMonad.Actions.Navigation2D
+-- import XMonad.Actions.CopyWindow (kill1)
+-- import qualified XMonad.Actions.Search as S
+    --
+-- import Data.Char (isSpace, toUpper)
+-- import Data.Maybe (fromJust, isJust)
+-- import Data.Monoid
+-- import Data.Tree
+-- import qualified Data.ByteString as B
+    --
+-- import XMonad.Hooks.ServerMode
+-- import XMonad.Hooks.WorkspaceHistory
+    --
+-- import XMonad.Layout.Accordion
+-- import XMonad.Layout.GridVariants (Grid(Grid))
+-- import XMonad.Layout.SimplestFloat
+-- import XMonad.Layout.SubLayouts
+-- import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
+-- import XMonad.Layout.Renamed
+-- import XMonad.Layout.ShowWName
+-- import XMonad.Layout.Simplest
+-- import XMonad.Layout.Tabbed
+-- import XMonad.Layout.VoidBorders
+-- import XMonad.Layout.LayoutModifier
+-- import qualified XMonad.Layout.ToggleLayouts as T (toggleLayouts, ToggleLayout(Toggle))
+-- import qualified XMonad.Layout.Magnifier as MG
+    --
+-- import XMonad.Util.Dmenu
 
-myStartupHook = do
-    spawn "$HOME/.xmonad/scripts/autostart.sh"
-    setWMName "LG3D"
+
+-- mod4Mask= super key
+-- mod1Mask= alt key
+-- controlMask= ctrl key
+-- shiftMask= shift key
+myModMask :: KeyMask
+myModMask = mod4Mask
+
+myTerminal :: String
+myTerminal = "kitty"
+
+myBrowser :: String
+myBrowser = "brave"
+
+myEmacs :: String
+myEmacs = "emacsclient"
+
+myEditor :: String
+myEditor = myTerminal ++ " -e nvim"
+
+myBorderWidth :: Dimension
+myBorderWidth = 2
+
 
 -- colours
 normBorder = "#4c566a"
@@ -59,6 +120,9 @@ focBorder = "#5e81ac"
 fore     = "#DEE3E0"
 back     = "#282c34"
 winType  = "#c678dd"
+
+-- windowCount :: X (Maybe String)
+-- windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
 -- workspaces
 ws1 = "1 \61705"
@@ -72,22 +136,52 @@ ws8 = "8 \61564"
 ws9 = "9 \62150"
 ws10 = "10 \61441"
 
---mod4Mask= super key
---mod1Mask= alt key
---controlMask= ctrl key
---shiftMask= shift key
 
-myModMask           = mod4Mask
-encodeCChar         = map fromIntegral . B.unpack
+
 myFocusFollowsMouse = True
-myBorderWidth       = 2
-myWorkspaces        = [ws1,ws2,ws3,ws4,ws5,ws6,ws7,ws8,ws9,ws10]
+myWorkspaces        = [ws1,ws2,ws3,ws4,ws5,ws6,ws7,ws8,ws9,ws10, "NSP"]
 -- myWorkspaces        = ["1 \61705","2 \61729","3 \61564","4 \61635","5 \61502","6 \62060","7 \61501","8 \61564","9 \62150","10 \61441"]
 --myWorkspaces    = ["1","2","3","4","5","6","7","8","9","10"]
 --myWorkspaces    = ["I","II","III","IV","V","VI","VII","VIII","IX","X"]
 -- Icons
 -- \61729 
 myBaseConfig = desktopConfig
+
+myStartupHook = do
+    spawn "$HOME/.xmonad/scripts/autostart.sh"
+    setWMName "LG3D"
+
+myScratchPads :: [NamedScratchpad]
+myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
+                , NS "calculator" spawnCalc findCalc manageCalc
+                , NS "htop" spawnHtop findHtop manageHtop
+                ]
+    where
+        spawnTerm   = myTerminal ++ " --title scratchpad"
+        findTerm    = title =? "scratchpad"
+        manageTerm  = customFloating $ W.RationalRect l t w h
+                    where
+                        h = 0.9
+                        w = 0.9
+                        t = 0.95 -h
+                        l = 0.95 -w
+        spawnCalc   = "galculator"
+        findCalc    = className =? "Galculator"
+        manageCalc  = customFloating $ W.RationalRect l t w h
+                    where
+                        h = 0.5
+                        w = 0.4
+                        t = 0.75 -h
+                        l = 0.7 -w
+        spawnHtop   = myTerminal ++ " --title scratchpad -e htop"
+        findHtop    = title =? "scratchpad"
+        manageHtop  = customFloating $ W.RationalRect l t w h
+                    where
+                        h = 0.9
+                        w = 0.9
+                        t = 0.95 -h
+                        l = 0.95 -w
+
 
 -- window manipulations
 myManageHook = composeAll . concat $
@@ -99,14 +193,14 @@ myManageHook = composeAll . concat $
     , [resource =? i --> doIgnore | i <- myIgnores]
     , [className =? x --> hasBorder True | x <- myNoBorders]
     , [(className =? x <||> title =? x <||> resource =? x) --> doFullFloat | x <- myFullFloats]
-    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws1 | x <- my1Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws1 | x <- my1Shifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws2 | x <- my2Shifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws3 | x <- my3Shifts]
-    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws4 | x <- my4Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws4 | x <- my4Shifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws5 | x <- my5Shifts]
-    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws6 | x <- my6Shifts]
-    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws7 | x <- my7Shifts]
-    -- , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws8 | x <- my8Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws6 | x <- my6Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws7 | x <- my7Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws8 | x <- my8Shifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws9 | x <- my9Shifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws10 | x <- my10Shifts]
     ]
@@ -116,16 +210,16 @@ myManageHook = composeAll . concat $
     myTFloats = ["Downloads", "Save As...", "Open Files"]
     myRFloats = []
     myIgnores = ["desktop_window"]
-    myNoBorders = ["Ulauncher"]
-    myFullFloats = ["arcologout.py", "Arcologout.py"]
-    -- my1Shifts = ["Chromium", "Vivaldi-stable", "Firefox"]
+    myNoBorders = []
+    myFullFloats = ["arcologout.py", "Arcologout.py", "archlinux-logout.py"]
+    my1Shifts = []
     my2Shifts = ["emacs", "code"]
     my3Shifts = ["thunar"]
-    -- my4Shifts = []
+    my4Shifts = []
     my5Shifts = ["Gimp", "feh", "nitrogen"]
-    -- my6Shifts = ["vlc", "mpv"]
-    -- my7Shifts = ["Virtualbox"]
-    -- my8Shifts = ["Thunar"]
+    my6Shifts = []
+    my7Shifts = ["vlc", "mpv", "Virtualbox"]
+    my8Shifts = []
     my9Shifts = ["skype", "discord"]
     my10Shifts = ["spotify"]
 
@@ -175,10 +269,11 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- , ((modMask, xK_t), spawn $ "urxvt" )
   , ((modMask, xK_v), spawn $ "pavucontrol" )
   , ((modMask, xK_w), spawn $ "brave" )
-  , ((modMask, xK_x), spawn $ "arcolinux-logout" )
+  , ((modMask, xK_x), spawn $ "archlinux-logout" )
   , ((modMask, xK_y), spawn $ "polybar-msg cmd toggle" )
   , ((modMask, xK_Escape), spawn $ "xkill" )
-  , ((modMask, xK_Return), spawn $ "alacritty" )
+  , ((modMask, xK_Return), spawn $ "kitty" )
+  , ((modMask, xK_KP_Enter), spawn $ "kitty" )
   , ((modMask, xK_space), spawn $ "xkb-switch -n" )
   -- , ((modMask, xK_KP_Return), spawn $ "alacritty" )
   , ((modMask, xK_equal), spawn $ "dmenu_run -i --nb '#191919' --nf '#fea63c' --sb '#fea63c' --sf '#191919' --font 'FiraCode Nerd Font Mono:bold:pixelsize=14' --render_minheight 30 --calc" )
@@ -196,12 +291,13 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- , ((modMask, xK_F12), spawn $ "rofi -show drun" )
 
   -- FUNCTION KEYS
-  , ((0, xK_F1), spawn $ "xfce4-terminal --drop-down" )
+  , ((0, xK_F1), namedScratchpadAction myScratchPads "terminal")
   -- , ((0, xK_F12), spawn $ "xfce4-terminal --drop-down" )
 
   -- SUPER + SHIFT KEYS
 
   , ((modMask .|. shiftMask , xK_Return ), spawn $ "thunar")
+  , ((modMask .|. shiftMask , xK_KP_Enter ), spawn $ "thunar")
   , ((modMask .|. shiftMask , xK_d ), spawn $ "dmenu_run -i --nb '#191919' --nf '#fea63c' --sb '#fea63c' --sf '#191919' --font 'FiraCode Nerd Font Mono:bold:pixelsize=14' --render_minheight 30 --calc")
   , ((modMask .|. shiftMask , xK_r ), spawn $ "xmonad --recompile && xmonad --restart")
   , ((modMask .|. shiftMask , xK_q ), kill)
@@ -231,7 +327,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((controlMask .|. mod1Mask , xK_u ), spawn $ "pavucontrol")
   , ((controlMask .|. mod1Mask , xK_v ), spawn $ "vivaldi-stable")
   , ((controlMask .|. mod1Mask , xK_w ), spawn $ "arcolinux-welcome-app")
-  , ((controlMask .|. mod1Mask , xK_Return ), spawn $ "alacritty")
+  , ((controlMask .|. mod1Mask , xK_Return ), namedScratchpadAction myScratchPads "terminal")
+  , ((controlMask .|. mod1Mask , xK_equal ), namedScratchpadAction myScratchPads "calculator")
+  , ((controlMask .|. mod1Mask , xK_h ), namedScratchpadAction myScratchPads "htop")
 
   -- ALT + ... KEYS
 
@@ -423,7 +521,7 @@ main = do
 
         {startupHook = myStartupHook
 , layoutHook = gaps [(U,40), (D,5), (R,5), (L,5)] $ myLayout ||| layoutHook myBaseConfig
-, manageHook = manageSpawn <+> myManageHook <+> manageHook myBaseConfig
+, manageHook = namedScratchpadManageHook myScratchPads <+> manageSpawn <+> myManageHook <+> manageHook myBaseConfig
 , modMask = myModMask
 , borderWidth = myBorderWidth
 , handleEventHook    = handleEventHook myBaseConfig <+> fullscreenEventHook

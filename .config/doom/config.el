@@ -14,6 +14,8 @@
 
 (setq doom-themes-treemacs-theme 'doom-colors)
 (setq treemacs-width 25)
+;; (map! :leader
+;;       :desc "Open treemacs" "o p" #'treemacs-display-current-project-exclusively)
 
 (map! :leader
       :desc "Org Babel tangle" "m B" #'org-babel-tangle)

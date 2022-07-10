@@ -83,6 +83,8 @@ Setting the theme of treemacs to doom-colors. Change default width.
 #+begin_src emacs-lisp
 (setq doom-themes-treemacs-theme 'doom-colors)
 (setq treemacs-width 25)
+;; (map! :leader
+;;       :desc "Open treemacs" "o p" #'treemacs-display-current-project-exclusively)
 #+end_src
 
 * ORG MODE

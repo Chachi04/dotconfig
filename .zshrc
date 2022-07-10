@@ -2,13 +2,13 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 #export ZSH="/home/$USER/.oh-my-zsh"
 
 export ZSH=/usr/share/oh-my-zsh/
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
+# ZSH_THEME="robbyrussell"
 
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 # ZSH_THEME_RANDOM_IGNORED=(pygmalion tjkirch_mod)
@@ -27,7 +27,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # DISABLE_LS_COLORS="true"
 
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # ENABLE_CORRECTION="true"
 
@@ -40,8 +40,9 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 plugins=(
-    # git
-    conda-zsh-completion
+    git
+    git-flow
+    # conda-zsh-completion
     zsh-z
     zsh-completions
     zsh-autosuggestions
@@ -51,7 +52,6 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# export MANPATH="/usr/local/man:$MANPATH"
 
 # export LANG=en_US.UTF-8
 
@@ -87,6 +87,10 @@ fi
 if [ -d "$HOME/.local/bin" ] ;
   then PATH="$HOME/.local/bin:$PATH"
 fi
+# export MANPATH="/usr/local/man:$MANPATH"
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+export DOTNET_ROOT=/snap/dotnet-sdk/current
 
 ###############################################################################
 #                                   aliases                                   #
@@ -279,7 +283,7 @@ alias iso="cat /etc/dev-rel | awk -F '=' '/ISO/ {print $2}'"
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
 
 #search content with ripgrep
-alias rg="rg --sort path"
+# alias rg="rg --sort path"
 
 #get the error messages from journalctl
 alias jctl="journalctl -p 3 -xb"
@@ -356,16 +360,16 @@ ex ()
 }
 
 #arcolinux applications
-alias att="arcolinux-tweak-tool"
-alias adt="arcolinux-desktop-trasher"
-alias abl="arcolinux-betterlockscreen"
-alias agm="arcolinux-get-mirrors"
-alias amr="arcolinux-mirrorlist-rank-info"
-alias aom="arcolinux-osbeck-as-mirror"
-alias ars="arcolinux-reflector-simple"
-alias atm="arcolinux-tellme"
-alias avs="arcolinux-vbox-share"
-alias awa="arcolinux-welcome-app"
+# alias att="arcolinux-tweak-tool"
+# alias adt="arcolinux-desktop-trasher"
+# alias abl="arcolinux-betterlockscreen"
+# alias agm="arcolinux-get-mirrors"
+# alias amr="arcolinux-mirrorlist-rank-info"
+# alias aom="arcolinux-osbeck-as-mirror"
+# alias ars="arcolinux-reflector-simple"
+# alias atm="arcolinux-tellme"
+# alias avs="arcolinux-vbox-share"
+# alias awa="arcolinux-welcome-app"
 
 #remove
 alias rmgitcache="rm -r ~/.cache/git"
@@ -373,14 +377,27 @@ alias rmgitcache="rm -r ~/.cache/git"
 #moving your personal files and folders from /personal to ~
 alias personal='cp -Rf /personal/* ~'
 
+# larave sail
+alias sail="./vendor/bin/sail"
+
+###############################################################################
+#                                 end aliases                                 #
+###############################################################################
+
+
 #create a file called .zshrc-personal and put all your personal aliases
 #in there. They will not be overwritten by skel.
 
 [[ -f ~/.zshrc-personal ]] && . ~/.zshrc-personal
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+source ~/anaconda3/initialize.sh
+
 # reporting tools - install when not installed
-# install neofetch
-neofetch
+# install neofetch -- installed
+# neofetch
 # install screenfetch
 #screenfetch
 # install ufetch-git
@@ -395,22 +412,5 @@ neofetch
 #hfetch
 # install lolcat
 #sfetch | lolcat
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/opt/anaconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/opt/anaconda/etc/profile.d/conda.sh" ]; then
-#         . "/opt/anaconda/etc/profile.d/conda.sh"
-#     else
-#         export PATH="/opt/anaconda/bin:$PATH"
-#     fi
-# fi
-# unset __conda_setup
-# <<< conda initialize <<<
-
+# arco
+# fastfetch
