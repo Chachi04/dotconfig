@@ -9,6 +9,7 @@ import XMonad.Actions.UpdatePointer
 import XMonad.Actions.CycleWS
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.Navigation2D
+import qualified XMonad.Actions.DynamicWorkspaceOrder as DO
 
 -- Data
 import qualified Data.Map as M
@@ -20,6 +21,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageHelpers(isFullscreen, doFullFloat, doCenterFloat, isDialog)
 import XMonad.Hooks.UrgencyHook
+import XMonad.Hooks.Minimize
 import qualified Codec.Binary.UTF8.String as UTF8
 
 -- Layouts
@@ -28,6 +30,7 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.Fullscreen (fullscreenFull)
 import XMonad.Layout.Cross(simpleCross)
 import XMonad.Layout.Spiral(spiral)
+import XMonad.Layout.Grid
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.CenteredMaster(centerMaster)
@@ -38,6 +41,7 @@ import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.Minimize
 
 -- Util
 import XMonad.Util.Run(spawnPipe)
@@ -95,6 +99,7 @@ import qualified DBus.Client as D
 -- mod1Mask= alt key
 -- controlMask= ctrl key
 -- shiftMask= shift key
+
 myModMask :: KeyMask
 myModMask = mod4Mask
 
@@ -102,13 +107,16 @@ myTerminal :: String
 myTerminal = "kitty"
 
 myBrowser :: String
-myBrowser = "brave"
+myBrowser = "brave-beta"
 
 myEmacs :: String
 myEmacs = "emacsclient"
 
 myEditor :: String
 myEditor = myTerminal ++ " -e nvim"
+
+myExplorer :: String
+myExplorer = "thunar"
 
 myBorderWidth :: Dimension
 myBorderWidth = 2
@@ -151,6 +159,13 @@ myStartupHook = do
     spawn "$HOME/.xmonad/scripts/autostart.sh"
     setWMName "LG3D"
 
+myTitleColor = "#c91a1a" -- color of window title
+myTitleLength = 80 -- truncate window title to this length
+myCurrentWSColor = "#6790eb" -- color of active workspace
+myVisibleWSColor = "#aaaaaa" -- color of inactive workspace
+myUrgentWSColor = "#c91a1a" -- color of workspace with 'urgent' window
+myHiddenNoWindowsWSColor = "white"
+
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "calculator" spawnCalc findCalc manageCalc
@@ -186,7 +201,7 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
 -- window manipulations
 myManageHook = composeAll . concat $
     [ [isDialog --> doCenterFloat]
-    -- , [isFullscreen --> doFullFloat]
+    , [isFullscreen --> doFullFloat]
     , [className =? c --> doCenterFloat | c <- myCFloats]
     , [title =? t --> doFloat | t <- myTFloats]
     , [resource =? r --> doFloat | r <- myRFloats]
@@ -225,13 +240,16 @@ myManageHook = composeAll . concat $
 
 
 
-
-myLayout = mkToggle (NBFULL ?? NOBORDERS ?? EOT) $ spacingRaw True (Border 0 5 5 5) True (Border 5 5 5 5) True $ avoidStruts $  windowNavigation tiled ||| Mirror tiled ||| spiral (6/7)  ||| ThreeColMid 1 (3/100) (1/2) ||| smartBorders Full
-    where
-        tiled = Tall nmaster delta tiled_ratio
-        nmaster = 1
-        delta = 3/100
-        tiled_ratio = 6/10
+myLayout = spacingRaw True (Border 0 5 5 5) True (Border 5 5 5 5) True $ gaps [(U, 40), (D, 5), (R, 5), (L, 5)]
+            $ avoidStruts
+            $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
+            $ smartBorders
+            $ windowNavigation (tiled |||  Grid ||| spiral (6/7) ||| ThreeColMid 1 (3/100) (1/2) ||| noBorders Full)
+                where
+                tiled   = Tall nmaster delta ratio
+                nmaster = 1
+                delta   = 3/100
+                ratio   = 6/10
 
 
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
@@ -258,7 +276,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     ((modMask, xK_b), spawn $ "~/.xmonad/scripts/background-select.sh /usr/share/backgrounds/custom/wallpapers")
   , ((modMask, xK_c), spawn $ "code")
   , ((modMask, xK_d), spawn $ "dmenu_run -i -f --nb '#191919' --nf '#fea63c' --sb '#fea63c' --sf '#191919' --font 'FiraCode Nerd Font Mono:bold:pixelsize=14' --render_minheight 30 -p 'Dmenu'")
-  , ((modMask, xK_e), spawn $ "emacsclient --quiet --create-frame --no-wait --alternate-editor='emacs'" )
+  , ((modMask, xK_e), spawn $ myEmacs ++ " --quiet --create-frame --no-wait --alternate-editor='emacs'" )
   -- , ((modMask, xK_c), spawn $ "conky-toggle" )
   , ((modMask, xK_f), sendMessage $ Toggle NBFULL)
   -- , ((modMask, xK_h), spawn $ "urxvt 'htop task manager' -e htop" )
@@ -268,12 +286,12 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- , ((modMask, xK_r), spawn $ "rofi-theme-selector" )
   -- , ((modMask, xK_t), spawn $ "urxvt" )
   , ((modMask, xK_v), spawn $ "pavucontrol" )
-  , ((modMask, xK_w), spawn $ "brave" )
+  , ((modMask, xK_w), spawn $ myBrowser)
   , ((modMask, xK_x), spawn $ "archlinux-logout" )
   , ((modMask, xK_y), spawn $ "polybar-msg cmd toggle" )
   , ((modMask, xK_Escape), spawn $ "xkill" )
-  , ((modMask, xK_Return), spawn $ "kitty" )
-  , ((modMask, xK_KP_Enter), spawn $ "kitty" )
+  , ((modMask, xK_Return), spawn $ myTerminal)
+  , ((modMask, xK_KP_Enter), spawn $ myTerminal)
   , ((modMask, xK_space), spawn $ "xkb-switch -n" )
   -- , ((modMask, xK_KP_Return), spawn $ "alacritty" )
   , ((modMask, xK_equal), spawn $ "dmenu_run -i --nb '#191919' --nf '#fea63c' --sb '#fea63c' --sf '#191919' --font 'FiraCode Nerd Font Mono:bold:pixelsize=14' --render_minheight 30 --calc" )
@@ -284,7 +302,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask, xK_F5), spawn $ "meld" )
   , ((modMask, xK_F6), spawn $ "vlc --video-on-top" )
   , ((modMask, xK_F7), spawn $ "virtualbox" )
-  , ((modMask, xK_F8), spawn $ "thunar" )
+  , ((modMask, xK_F8), spawn $ myExplorer)
   , ((modMask, xK_F9), spawn $ "evolution" )
   , ((modMask, xK_F10), spawn $ "spotify" )
   -- , ((modMask, xK_F11), spawn $ "rofi -theme-str 'window {width: 100%;height: 100%;}' -show drun" )
@@ -296,12 +314,12 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- SUPER + SHIFT KEYS
 
-  , ((modMask .|. shiftMask , xK_Return ), spawn $ "thunar")
-  , ((modMask .|. shiftMask , xK_KP_Enter ), spawn $ "thunar")
+  , ((modMask .|. shiftMask , xK_Return ), spawn $ myExplorer)
+  , ((modMask .|. shiftMask , xK_KP_Enter ), spawn $ myExplorer)
   , ((modMask .|. shiftMask , xK_d ), spawn $ "dmenu_run -i --nb '#191919' --nf '#fea63c' --sb '#fea63c' --sf '#191919' --font 'FiraCode Nerd Font Mono:bold:pixelsize=14' --render_minheight 30 --calc")
   , ((modMask .|. shiftMask , xK_r ), spawn $ "xmonad --recompile && xmonad --restart")
   , ((modMask .|. shiftMask , xK_q ), kill)
-  , ((modMask .|. shiftMask , xK_w ), spawn $ "brave --incognito")
+  , ((modMask .|. shiftMask , xK_w ), spawn $ myBrowser ++ " --incognito")
   -- , ((modMask .|. shiftMask , xK_space ), withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1))
   -- , ((modMask .|. shiftMask , xK_x ), io (exitWith ExitSuccess))
 
@@ -310,7 +328,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((controlMask .|. mod1Mask , xK_Next ), spawn $ "conky-rotate -n")
   , ((controlMask .|. mod1Mask , xK_Prior ), spawn $ "conky-rotate -p")
   , ((controlMask .|. mod1Mask , xK_a ), spawn $ "xfce4-appfinder")
-  , ((controlMask .|. mod1Mask , xK_b ), spawn $ "thunar")
+  , ((controlMask .|. mod1Mask , xK_b ), spawn $ myExplorer)
   , ((controlMask .|. mod1Mask , xK_c ), spawn $ "catfish")
   , ((controlMask .|. mod1Mask , xK_e ), spawn $ "arcolinux-tweak-tool")
   , ((controlMask .|. mod1Mask , xK_f ), spawn $ "firefox")
@@ -409,13 +427,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- Cycle through the available layout algorithms.
   -- , ((modMask, xK_space), sendMessage NextLayout)
-  -- , ((modMask, xK_Tab), sendMessage NextLayout)
+  , ((modMask, xK_Tab), sendMessage NextLayout)
+
+  , ((modMask .|. shiftMask, xK_Tab), setLayout $ XMonad.layoutHook conf)
 
   --Focus selected desktop
   , ((mod1Mask, xK_Tab), nextWS)
 
   --Focus selected desktop
-  , ((modMask, xK_Tab), nextWS)
+  -- , ((modMask, xK_Tab), nextWS)
 
   --Focus selected desktop
   , ((controlMask .|. mod1Mask , xK_Left ), prevWS)
@@ -424,7 +444,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((controlMask .|. mod1Mask , xK_Right ), nextWS)
 
   --  Reset the layouts on the current workspace to default.
-  , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
+  , ((modMask .|. shiftMask, xK_space), withFocused $ windows . W.sink)
 
   -- Move focus to the next window.
   -- , ((modMask, xK_j), windows W.focusDown)
@@ -454,7 +474,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((controlMask .|. modMask .|. mod1Mask , xK_l), sendMessage Expand)
 
   -- Push window back into tiling.
-  , ((controlMask .|. shiftMask , xK_t), withFocused $ windows . W.sink)
+  -- , ((controlMask .|. shiftMask , xK_t), withFocused $ windows . W.sink)
 
   , ((modMask, xK_l), sendMessage $ Go R)
   , ((modMask, xK_h), sendMessage $ Go L)
@@ -514,22 +534,39 @@ main = do
     -- Request access to the DBus name
     D.requestName dbus (D.busName_ "org.xmonad.Log")
         [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
-
-
-    xmonad $ ewmh $
-            myBaseConfig
-
+    -- xmproc0 <- spawnPipe "xmobar -x 0 $HOME/.xmonad/scripts/xmobarrc"
+    -- xmproc1 <- spawnPipe "xmobar -x 0 $HOME/.xmonad/scripts/xmobarrc"
+    xmonad $ ewmh $ ewmhFullscreen $
+        myBaseConfig
         {startupHook = myStartupHook
-, layoutHook = gaps [(U,40), (D,5), (R,5), (L,5)] $ myLayout ||| layoutHook myBaseConfig
-, manageHook = namedScratchpadManageHook myScratchPads <+> manageSpawn <+> myManageHook <+> manageHook myBaseConfig
-, modMask = myModMask
-, borderWidth = myBorderWidth
-, handleEventHook    = handleEventHook myBaseConfig <+> fullscreenEventHook
-, focusFollowsMouse = myFocusFollowsMouse
-, workspaces = myWorkspaces
-, focusedBorderColor = focBorder
-, normalBorderColor = normBorder
-, keys = myKeys
-, mouseBindings = myMouseBindings
-, logHook = updatePointer (0.5,0.5) (0,0)
+    , layoutHook =  myLayout ||| layoutHook myBaseConfig
+    , manageHook = namedScratchpadManageHook myScratchPads <+> manageSpawn <+> myManageHook <+> manageHook myBaseConfig
+    , modMask = myModMask
+    , borderWidth = myBorderWidth
+    , handleEventHook    = handleEventHook myBaseConfig
+    , focusFollowsMouse = myFocusFollowsMouse
+    , workspaces = myWorkspaces
+    , focusedBorderColor = focBorder
+    , normalBorderColor = normBorder
+    , keys = myKeys
+    , mouseBindings = myMouseBindings
+    , logHook = updatePointer (0.5, 0.5) (0, 0)
+    -- , logHook = dynamicLogWithPP $ def {
+    --     ppOutput = \x -> System.IO.hPutStrLn xmproc0 x >> System.IO.hPutStrLn xmproc1 x
+    --         , ppTitle = xmobarColor myTitleColor "" . ( \ str -> "")
+    --         , ppCurrent = xmobarColor myCurrentWSColor "" . wrap """"
+    --         , ppVisible = xmobarColor myVisibleWSColor "" . wrap """"
+    --         , ppHidden = wrap """"
+    --         , ppHiddenNoWindows = xmobarColor myHiddenNoWindowsWSColor ""
+    --         , ppUrgent = xmobarColor myUrgentWSColor ""
+    --         , ppSep = "  "
+    --         , ppWsSep = "  "
+    --         , ppLayout = (\ x -> case x of
+    --             "Spacing Tall"              -> "<fc=#666666>|</fc>  <fn=1>Tall</fn>"
+    --             "Spacing Grid"                 -> "<fc=#666666>|</fc>  <fn=1>Grid</fn>"
+    --             "Spacing Spiral"               -> "<fc=#666666>|</fc>  <fn=1>Spiral</fn>"
+    --             "Spacing ThreeCol"             -> "<fc=#666666>|</fc>  <fn=1>ThreeColMid</fn>"
+    --             "Spacing Full"                 -> "<fc=#666666>|</fc>  <fn=1>Full</fn>"
+    --             _                                         -> x )
+    --}  updatePointer (0.5, 0.5) (0, 0)
 }
