@@ -386,6 +386,42 @@ alias sail="./vendor/bin/sail"
 ###############################################################################
 
 
+###############################################################################
+#                                   Dot files                                 #
+###############################################################################
+
+
+export DOT_FILES=$(
+TRACK_FILES=(
+    ~/.bashrc
+    ~/.config/doom/
+    ~/.config/alacritty/
+    ~/.config/i3/
+    ~/.config/nvim
+    ~/.config/polybar/
+    ~/.conkyrc
+    ~/.gitmodules
+    ~/.tmux.conf
+    ~/.xmonad/scripts/
+    ~/.xmonad/xmonad-x86_64-linux
+    ~/.xmonad/xmonad.errors
+    ~/.xmonad/xmonad.hi
+    ~/.xmonad/xmonad.hs
+    ~/.xmonad/xmonad.o
+    ~/.xmonad/xpm/calendar-clock-icon_20.xpm
+    ~/.xmonad/xpm/cpu_20.xpm
+    ~/.xmonad/xpm/harddisk-icon_20.xpm
+    ~/.xmonad/xpm/haskell_20.xpm
+    ~/.xmonad/xpm/memory-icon_20.xpm
+    ~/.xmonad/xpm/net_down_20.xpm
+    ~/.xmonad/xpm/net_up.20.xpm
+    ~/.zshrc
+    ~/README.org
+);
+IFS="|";
+echo "$TRACK_FILES[*]"
+)
+
 #create a file called .zshrc-personal and put all your personal aliases
 #in there. They will not be overwritten by skel.
 

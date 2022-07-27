@@ -268,6 +268,13 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 
 -- keys config
 
+-- myKeys :: XConfig l0 -> [((KeyMask, KeySym), NamedAction)]
+-- myKeys c =
+--     let subKeys str ks = subtitle' str : mkNamedKeymap c ks in
+--     subKeys "Xmonad Essentials"
+--     [ ("M-C-r", addName "Recompile XMonad"      $ spawn "xmonad --recompile")
+--     ]
+
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   ----------------------------------------------------------------------
   -- SUPER + FUNCTION KEYS
