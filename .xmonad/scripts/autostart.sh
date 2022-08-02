@@ -52,6 +52,7 @@ picom --config $HOME/.xmonad/scripts/picom.conf &
 /usr/lib/xfce4/notifyd/xfce4-notifyd &
 
 emacs --daemon
+thunar --daemon
 
 #starting user applications at boot time
 #nitrogen --restore &
