@@ -116,6 +116,9 @@ alias vi='nvim'
 alias emacs="emacsclient --quiet --create-frame --no-wait --alternate-editor=''"
 alias killemacs="emacsclient --eval '(save-buffers-kill-emacs)'"
 
+#mail
+alias mail="/var/lib/snapd/snap/bin/mailspring"
+
 #rogauracore | keyboard backlight
 alias color="sudo rogauracore"
 
@@ -196,7 +199,7 @@ alias update='sudo pacman -Syyu'
 # yay as aur helper - updates everything
 alias pksyua="paru -Syu --noconfirm"
 alias upall="paru -Syu --noconfirm"
-alias yay="paru"
+# alias yay="paru"
 alias yeet="yay -Rns"
 
 #ps
