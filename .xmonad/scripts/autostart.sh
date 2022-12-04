@@ -18,7 +18,7 @@ function run {
 #xrandr --output HDMI2 --mode 1920x1080 --pos 1920x0 --rotate normal --output HDMI1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output VIRTUAL1 --off
 # xrandr --output HDMI-1 --primary --auto --output eDP-1 --right-of HDMI-1 --auto
 screens=($(xrandr | grep -w connected | awk '{print $1}'))
-xrandr --output ${screens[1]} --primary --auto --output ${screens[0]} --right-of ${screens[1]} --auto
+xrandr --output ${screens[1]} --primary --auto --output ${screens[0]} --right-of ${screens[1]} --auto &
 
 (sleep 2; run $HOME/.config/polybar/launch.sh) &
 

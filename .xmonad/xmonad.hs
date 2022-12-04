@@ -22,6 +22,8 @@ import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageHelpers(isFullscreen, doFullFloat, doCenterFloat, isDialog)
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.Minimize
+import XMonad.Hooks.StatusBar
+import XMonad.Hooks.StatusBar.PP
 import qualified Codec.Binary.UTF8.String as UTF8
 
 -- Layouts
@@ -47,6 +49,7 @@ import XMonad.Layout.Minimize
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings, additionalKeysP)
 import XMonad.Util.NamedScratchpad
+import XMonad.Util.Loggers
 
 -- Configs
 import XMonad.Config.Desktop
@@ -100,8 +103,6 @@ import qualified DBus.Client as D
 -- controlMask= ctrl key
 -- shiftMask= shift key
 
-myModMask :: KeyMask
-myModMask = mod4Mask
 
 myTerminal :: String
 myTerminal = "kitty"
@@ -118,19 +119,23 @@ myEditor = myTerminal ++ " -e nvim"
 myExplorer :: String
 myExplorer = "thunar"
 
-myBorderWidth :: Dimension
-myBorderWidth = 2
-
-
--- colours
-normBorder = "#4c566a"
-focBorder = "#5e81ac"
-fore     = "#DEE3E0"
-back     = "#282c34"
-winType  = "#c678dd"
-
--- windowCount :: X (Maybe String)
--- windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
+myModMask :: KeyMask
+myModMask = mod4Mask
+myDefaults = def {
+        normalBorderColor   = "#4c566a"
+      , focusedBorderColor  = "#5e81ac"
+      , focusFollowsMouse    = True
+      , mouseBindings       = myMouseBindings
+      , workspaces          = myWorkspaces
+      , keys                = myKeys
+      , modMask             = myModMask
+      , borderWidth         = 2
+      , layoutHook          = myLayoutHook ||| layoutHook myBaseConfig
+      , startupHook         = myStartupHook
+      , manageHook          = namedScratchpadManageHook myScratchPads <+> manageSpawn <+> myManageHook -- <+> manageHook myBaseConfig
+      , handleEventHook     = handleEventHook myBaseConfig -- myEventHook
+      , logHook = updatePointer (0.5, 0.5) (0, 0)
+      }
 
 -- workspaces
 ws1 = "1 \61705"
@@ -143,28 +148,21 @@ ws7 = "7 \61501"
 ws8 = "8 \61564"
 ws9 = "9 \62150"
 ws10 = "10 \61441"
+myWorkspaces = [ws1,ws2,ws3,ws4,ws5,ws6,ws7,ws8,ws9,ws10, "NSP"]
 
-
-
-myFocusFollowsMouse = True
-myWorkspaces        = [ws1,ws2,ws3,ws4,ws5,ws6,ws7,ws8,ws9,ws10, "NSP"]
 -- myWorkspaces        = ["1 \61705","2 \61729","3 \61564","4 \61635","5 \61502","6 \62060","7 \61501","8 \61564","9 \62150","10 \61441"]
 --myWorkspaces    = ["1","2","3","4","5","6","7","8","9","10"]
 --myWorkspaces    = ["I","II","III","IV","V","VI","VII","VIII","IX","X"]
 -- Icons
 -- \61729 
+
+
 myBaseConfig = desktopConfig
 
 myStartupHook = do
     spawn "$HOME/.xmonad/scripts/autostart.sh"
     setWMName "LG3D"
 
-myTitleColor = "#c91a1a" -- color of window title
-myTitleLength = 80 -- truncate window title to this length
-myCurrentWSColor = "#6790eb" -- color of active workspace
-myVisibleWSColor = "#aaaaaa" -- color of inactive workspace
-myUrgentWSColor = "#c91a1a" -- color of workspace with 'urgent' window
-myHiddenNoWindowsWSColor = "white"
 
 myScratchPads :: [NamedScratchpad]
 myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
@@ -208,19 +206,20 @@ myManageHook = composeAll . concat $
     , [resource =? i --> doIgnore | i <- myIgnores]
     , [className =? x --> hasBorder True | x <- myNoBorders]
     , [(className =? x <||> title =? x <||> resource =? x) --> doFullFloat | x <- myFullFloats]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws1 | x <- my1Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws2 | x <- my2Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws3 | x <- my3Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws4 | x <- my4Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws5 | x <- my5Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws6 | x <- my6Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws7 | x <- my7Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws8 | x <- my8Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws9 | x <- my9Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo ws10 | x <- my10Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws1 <+> viewShift ws1 | x <- my1Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws2 <+> viewShift ws2 | x <- my2Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws3 <+> viewShift ws3 | x <- my3Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws4 <+> viewShift ws4 | x <- my4Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws5 <+> viewShift ws5 | x <- my5Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws6 <+> viewShift ws6 | x <- my6Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws7 <+> viewShift ws7 | x <- my7Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws8 <+> viewShift ws8 | x <- my8Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws9 <+> viewShift ws9 | x <- my9Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws10 <+> viewShift ws10 | x <- my10Shifts]
+    , [(className =? "Spotify") --> doShift ws10 <+> viewShift ws10 | x <- my10Shifts]
     ]
     where
-    doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
+    viewShift = doF . liftM2 (.) W.greedyView W.shift
     myCFloats = ["Arandr", "Arcolinux-calamares-tool.py", "Arcolinux-tweak-tool.py", "Arcolinux-welcome-app.py", "Blueberry.py", "Galculator", "feh", "mpv", "Xfce4-terminal", "xdg-desktop-portal-gnome", "Open Files"]
     myTFloats = ["Downloads", "Save As...", "Open Files"]
     myRFloats = []
@@ -236,15 +235,16 @@ myManageHook = composeAll . concat $
     my7Shifts = ["vlc", "mpv", "Virtualbox"]
     my8Shifts = []
     my9Shifts = ["skype", "discord"]
-    my10Shifts = ["spotify"]
+    my10Shifts = ["spotify", "Spotify"]
 
 
 
-myLayout = spacingRaw True (Border 0 5 5 5) True (Border 5 5 5 5) True $ gaps [(U, 40), (D, 5), (R, 5), (L, 5)]
+myLayoutHook = spacingRaw True (Border 0 5 5 5) True (Border 5 5 5 5) True $ gaps [(U, 5), (D, 5), (R, 5), (L, 5)]
             $ avoidStruts
             $ mkToggle (NBFULL ?? NOBORDERS ?? EOT)
             $ smartBorders
-            $ windowNavigation (tiled |||  Grid ||| spiral (6/7) ||| ThreeColMid 1 (3/100) (1/2) ||| noBorders Full)
+            $ windowNavigation
+            (tiled |||  Grid ||| spiral (6/7) ||| ThreeColMid 1 (3/100) (1/2) ||| noBorders Full)
                 where
                 tiled   = Tall nmaster delta ratio
                 nmaster = 1
@@ -329,6 +329,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. shiftMask , xK_w ), spawn $ myBrowser ++ " --incognito")
   -- , ((modMask .|. shiftMask , xK_space ), withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1))
   -- , ((modMask .|. shiftMask , xK_x ), io (exitWith ExitSuccess))
+
+  , ((mod1Mask .|. shiftMask , xK_w ), spawn $ myBrowser ++ " --tor")
 
   -- CONTROL + ALT KEYS
 
@@ -534,30 +536,30 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
       | (key, sc) <- zip [xK_Left, xK_Right] [0..]
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
-main :: IO ()
 main = do
 
-    dbus <- D.connectSession
-    -- Request access to the DBus name
-    D.requestName dbus (D.busName_ "org.xmonad.Log")
-        [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
-    -- xmproc0 <- spawnPipe "xmobar -x 0 $HOME/.xmonad/scripts/xmobarrc"
-    -- xmproc1 <- spawnPipe "xmobar -x 0 $HOME/.xmonad/scripts/xmobarrc"
-    xmonad $ ewmh $ ewmhFullscreen $
-        myBaseConfig
-        {startupHook = myStartupHook
-    , layoutHook =  myLayout ||| layoutHook myBaseConfig
-    , manageHook = namedScratchpadManageHook myScratchPads <+> manageSpawn <+> myManageHook <+> manageHook myBaseConfig
-    , modMask = myModMask
-    , borderWidth = myBorderWidth
-    , handleEventHook    = handleEventHook myBaseConfig
-    , focusFollowsMouse = myFocusFollowsMouse
-    , workspaces = myWorkspaces
-    , focusedBorderColor = focBorder
-    , normalBorderColor = normBorder
-    , keys = myKeys
-    , mouseBindings = myMouseBindings
-    , logHook = updatePointer (0.5, 0.5) (0, 0)
+    -- dbus <- D.connectSession
+    -- -- Request access to the DBus name
+    -- D.requestName dbus (D.busName_ "org.xmonad.Log")
+    --     [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+    -- -- xmproc0 <- spawnPipe "xmobar -x 0 $HOME/.xmonad/scripts/xmobarrc"
+    -- -- xmproc1 <- spawnPipe "xmobar -x 0 $HOME/.xmonad/scripts/xmobarrc"
+    -- -- xmonad $ ewmhFullscreen $ ewmh $ xmobarProp $
+    xmonad $ xmobarProp $ ewmh $ ewmhFullscreen $ myDefaults
+     -- . withEasySB (statusBarProp "xmobar" (pure myXmobarPP)) defToggleStrutsKey
+        -- {startupHook = myStartupHook
+    -- , layoutHook =  myLayout ||| layoutHook myBaseConfig
+    -- , manageHook = namedScratchpadManageHook myScratchPads <+> manageSpawn <+> myManageHook -- <+> manageHook myBaseConfig
+    -- , modMask = myModMask
+    -- , borderWidth = myBorderWidth
+    -- , handleEventHook    = handleEventHook myBaseConfig
+    -- , focusFollowsMouse = myFocusFollowsMouse
+    -- , workspaces = myWorkspaces
+    -- , focusedBorderColor = focBorder
+    -- , normalBorderColor = normBorder
+    -- , keys = myKeys
+    -- , mouseBindings = myMouseBindings
+    -- , logHook = updatePointer (0.5, 0.5) (0, 0)
     -- , logHook = dynamicLogWithPP $ def {
     --     ppOutput = \x -> System.IO.hPutStrLn xmproc0 x >> System.IO.hPutStrLn xmproc1 x
     --         , ppTitle = xmobarColor myTitleColor "" . ( \ str -> "")
@@ -576,4 +578,44 @@ main = do
     --             "Spacing Full"                 -> "<fc=#666666>|</fc>  <fn=1>Full</fn>"
     --             _                                         -> x )
     --}  updatePointer (0.5, 0.5) (0, 0)
-}
+-- }
+
+
+
+-- windowCount :: X (Maybe String)
+-- windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
+
+-- myTitleColor = "#c91a1a" -- color of window title
+-- myTitleLength = 80 -- truncate window title to this length
+-- myCurrentWSColor = "#6790eb" -- color of active workspace
+-- myVisibleWSColor = "#aaaaaa" -- color of inactive workspace
+-- myUrgentWSColor = "#c91a1a" -- color of workspace with 'urgent' window
+-- myHiddenNoWindowsWSColor = "white"
+
+-- myXmobarPP :: PP
+-- myXmobarPP = def
+--      { ppSep             = magenta " • "
+--     , ppTitleSanitize   = xmobarStrip
+--     , ppCurrent         = wrap " " "" . xmobarBorder "Top" "#8be9fd" 2
+--     , ppHidden          = white . wrap " " ""
+--     , ppHiddenNoWindows = lowWhite . wrap " " ""
+--     , ppUrgent          = red . wrap (yellow "!") (yellow "!")
+--     , ppOrder           = \[ws, l, _, wins] -> [ws, l, wins]
+--     , ppExtras          = [logTitles formatFocused formatUnfocused]
+--     }
+--   where
+--     formatFocused   = wrap (white    "[") (white    "]") . magenta . ppWindow
+--     formatUnfocused = wrap (lowWhite "[") (lowWhite "]") . blue    . ppWindow
+
+--     -- | Windows should have *some* title, which should not not exceed a
+--     -- sane length.
+--     ppWindow :: String -> String
+--     ppWindow = xmobarRaw . (\w -> if null w then "untitled" else w) . shorten 30
+
+--     blue, lowWhite, magenta, red, white, yellow :: String -> String
+--     magenta  = xmobarColor "#ff79c6" ""
+--     blue     = xmobarColor "#bd93f9" ""
+--     white    = xmobarColor "#f8f8f2" ""
+--     yellow   = xmobarColor "#f1fa8c" ""
+--     red      = xmobarColor "#ff5555" ""
+--     lowWhite = xmobarColor "#bbbbbb" ""
