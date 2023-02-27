@@ -108,7 +108,7 @@ myTerminal :: String
 myTerminal = "kitty"
 
 myBrowser :: String
-myBrowser = "brave-beta"
+myBrowser = "brave" -- "brave-beta"
 
 myEmacs :: String
 myEmacs = "emacsclient"
@@ -168,6 +168,7 @@ myScratchPads :: [NamedScratchpad]
 myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "calculator" spawnCalc findCalc manageCalc
                 , NS "htop" spawnHtop findHtop manageHtop
+                -- , NS "notion" spawnNotion findNotion manageNotion
                 ]
     where
         spawnTerm   = myTerminal ++ " --title scratchpad"
@@ -194,6 +195,14 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm
                         w = 0.9
                         t = 0.95 -h
                         l = 0.95 -w
+        spawnNotion = "notion-app" -- ++ ";"
+        findNotion  = title =? "notion-app"
+        manageNotion = customFloating $ W.RationalRect l t w h
+                    where
+                        h = 0.9
+                        w = 0.9
+                        t = 0.95 -h
+                        l = 0.95 -w
 
 
 -- window manipulations
@@ -215,8 +224,8 @@ myManageHook = composeAll . concat $
     , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws7 <+> viewShift ws7 | x <- my7Shifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws8 <+> viewShift ws8 | x <- my8Shifts]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws9 <+> viewShift ws9 | x <- my9Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws10 <+> viewShift ws10 | x <- my10Shifts]
-    , [(className =? "Spotify") --> doShift ws10 <+> viewShift ws10 | x <- my10Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShift ws9 <+> viewShift ws9 | x <- my10Shifts]
+    -- , [(className =? "Spotify") --> doShift ws10 <+> viewShift ws10 | x <- my10Shifts]
     ]
     where
     viewShift = doF . liftM2 (.) W.greedyView W.shift
@@ -357,6 +366,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((controlMask .|. mod1Mask , xK_Return ), namedScratchpadAction myScratchPads "terminal")
   , ((controlMask .|. mod1Mask , xK_equal ), namedScratchpadAction myScratchPads "calculator")
   , ((controlMask .|. mod1Mask , xK_h ), namedScratchpadAction myScratchPads "htop")
+  , ((controlMask .|. mod1Mask , xK_n ), namedScratchpadAction myScratchPads "notion")
 
   -- ALT + ... KEYS
 
